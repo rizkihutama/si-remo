@@ -12,6 +12,13 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
+    const ROLE_ADMIN = 1;
+    const ROLE_USER = 2;
+
+    protected $table = "users";
+    protected $primaryKey = "user_id";
+    protected $guarded = ["user_id"];
+
     /**
      * The attributes that are mass assignable.
      *
@@ -20,7 +27,15 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'phone',
         'password',
+        'role',
+        'nik',
+        'city_id',
+        'address',
+        'postal_code',
+        'created_at',
+        'updated_at',
     ];
 
     /**
@@ -29,6 +44,8 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
+        'nik',
+        'address',
         'password',
         'remember_token',
     ];
@@ -41,4 +58,9 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function isAdmin()
+    {
+        return $this->role == self::ROLE_ADMIN;
+    }
 }
