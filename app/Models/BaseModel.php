@@ -101,4 +101,19 @@ abstract class BaseModel extends Model
   {
     return now()->parse($value)->format('H:i');
   }
+
+  public function createdBy()
+  {
+    return $this->belongsTo(User::class, 'created_by', 'user_id');
+  }
+
+  public function udatedBy()
+  {
+    return $this->belongsTo(User::class, 'updated_by', 'user_id');
+  }
+
+  public static function rupiah($price)
+  {
+    return 'Rp.' . number_format($price, 0, ',', '.');
+  }
 }

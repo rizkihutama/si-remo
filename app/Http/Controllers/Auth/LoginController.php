@@ -43,7 +43,7 @@ class LoginController extends Controller
     {
 
         if ($user->isAdmin()) {
-            return redirect()->intended('admin.dashboard');
+            return redirect()->intended('/dashboard');
         }
 
         $request->session()->regenerate();
