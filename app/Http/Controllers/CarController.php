@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\FileHelper;
 use App\Models\Car;
 use App\Models\CarBrand;
 use App\Models\CarModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
 use Yajra\DataTables\Html\Builder;
 use Illuminate\Validation\Rule;
@@ -24,14 +24,12 @@ class CarController extends Controller
 
     private function validateClass(Request $request, $car = null)
     {
-        // if ($car == null) {
         return $request->validate([
             'brand_id' => 'required|numeric',
             'model_id' => 'required|numeric',
             'year' => 'required|numeric|digits:4',
             // 'image' => 'required|file|size:2048|mimes:jpg,jpeg,bmp,png,gif,svg,webp,doc,docx,xls,pdf,xlsx',
             'status' => 'required|numeric',
-            // 'image' => 'required|image|max:2048',
             'image' => [
                 'image',
                 'max:2048',
@@ -40,7 +38,6 @@ class CarController extends Controller
             'seats' => 'required|numeric',
             'luggage' => 'required|numeric',
             'cc' => 'required|numeric',
-            // 'number_plates' => 'required|string|unique:cars,number_plates',
             'number_plates' => [
                 'required',
                 'string',
@@ -48,20 +45,6 @@ class CarController extends Controller
             ],
             'price' => 'required|numeric',
         ]);
-        // } else {
-        //     return $request->validate([
-        //         'brand_id' => 'required|numeric',
-        //         'model_id' => 'required|numeric',
-        //         'year' => 'required|numeric|digits:4',
-        //         'status' => 'required|numeric',
-        //         'image' => 'image|max:2048',
-        //         'seats' => 'required|numeric',
-        //         'luggage' => 'required|numeric',
-        //         'cc' => 'required|numeric',
-        //         'number_plates' => 'required|string|unique:cars,number_plates,' . $car . ',car_id',
-        //         'price' => 'required|numeric',
-        //     ]);
-        // }
     }
 
     /**
@@ -76,8 +59,9 @@ class CarController extends Controller
             $datatables = DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
-                    $editRoute = route('admin.cars.edit', ['car' => $row]);
                     $showRoute = route('admin.cars.show', ['car' => $row]);
+                    $editRoute = route('admin.cars.edit', ['car' => $row]);
+                    $deleteRoute = route('admin.cars.delete', ['car' => $row]);
                     $csrf = csrf_field();
                     $method = method_field('DELETE');
                     $btn = "<div class='d-flex'>
@@ -169,12 +153,9 @@ class CarController extends Controller
             $carName = $brandName . ' ' . $modelName . ' ' . $request->year;
 
             $car->name = $carName;
-            $imageName = time() . '_' . $request->file('image')->getClientOriginalName();
+            $imageName = FileHelper::upload($request->file('image'), Car::getImgPath());
             $car->image = $imageName;
             $car->save();
-
-            // $request->image->move(public_path('images'), $imageName);
-            $path = Storage::putFileAs(Car::getImgPath(), $request->file('image'), $imageName);
 
             DB::commit();
         } catch (\Throwable $e) {
@@ -254,10 +235,9 @@ class CarController extends Controller
 
             if (!empty($request->file('image'))) {
                 //* hapus old file
-                Storage::disk('local')->delete(Car::getImgPath() . $oldFile);
+                FileHelper::delete(Car::getImgPath() . $oldFile);
                 //* Get New File Name
-                $newFile = time() . '_' . $request->file('image')->getClientOriginalName();
-                $path = Storage::putFileAs(Car::getImgPath(), $request->file('image'), $newFile);
+                $newFile = FileHelper::upload($request->file('image'), Car::getImgPath());
             }
 
             $car->fill($request->all());
