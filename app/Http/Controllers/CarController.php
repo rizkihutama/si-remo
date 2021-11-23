@@ -61,7 +61,7 @@ class CarController extends Controller
                 ->addColumn('action', function ($row) {
                     $showRoute = route('admin.cars.show', ['car' => $row]);
                     $editRoute = route('admin.cars.edit', ['car' => $row]);
-                    $deleteRoute = route('admin.cars.delete', ['car' => $row]);
+                    $deleteRoute = route('admin.cars.destroy', ['car' => $row]);
                     $csrf = csrf_field();
                     $method = method_field('DELETE');
                     $btn = "<div class='d-flex'>
@@ -71,6 +71,11 @@ class CarController extends Controller
                                 <a href='{$editRoute}' class='btn btn-icon btn-primary btn-sm mr-2' title='Edit'>
                                     <i class='far fa-edit icon-nm'></i>
                                 </a>
+                                <form method='POST' action='{$deleteRoute}'>{$csrf}{$method}
+                                    <button class='btn btn-icon btn-danger btn-sm' title='Delete' onclick=\"return deleteAlert(event)\">
+                                        <i class='far fa-trash-alt icon-nm'></i>
+                                    </button>
+                                </form>
                             </div>";
 
                     return $btn;
@@ -266,6 +271,17 @@ class CarController extends Controller
      */
     public function destroy(Car $car)
     {
-        //
+        DB::beginTransaction();
+        try {
+            $car->delete();
+            File::delete($car->image);
+
+            DB::commit();
+        } catch (\Throwable $e) {
+            DB::rollback();
+            return Redirect::back()->with('error', $e->getMessage() . ' : ' . $e->getLine());
+        }
+
+        return redirect()->route('admin.cars.index')->with('success', 'Car Deleted Success');
     }
 }
