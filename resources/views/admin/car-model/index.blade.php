@@ -4,15 +4,20 @@
 <!-- Page Heading -->
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
   <h1 class="h3 mb-0 text-gray-800">Car Models</h1>
-  <a href="{{ route('admin.car-models.create') }}"
-    class="tambah d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
-    <i class="fas fa-plus"></i> Add Models</a>
 </div>
 
 <!-- Content Row -->
 <div class="card shadow mb-4">
   <div class="card-header py-3">
-    <h6 class="m-0 font-weight-bold text-primary">Car Models</h6>
+    <ul class="nav nav-pills card-header-pills justify-content-between">
+      <li class="nav-item">
+        <h6 class="m-0 font-weight-bold text-primary nav-link">Car Models</h6>
+      </li>
+      <li class="nav-item">
+        <a href="{{ route('admin.car-models.create') }}" class="btn btn-primary btn-sm nav-link">
+          <i class="fas fa-plus"></i>&nbsp;&nbsp; Add Models</a>
+      </li>
+    </ul>
   </div>
   <div class="card-body">
     <div class="table-responsive">

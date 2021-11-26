@@ -47,11 +47,11 @@
     </div>
   </li>
 
-  <!-- Nav Item - Charts -->
-  <li class="nav-item">
-    <a class="nav-link" href="#">
-      <i class="fas fa-fw fa-chart-area"></i>
-      <span>Charts</span></a>
+  <!-- Drivers -->
+  <li class="nav-item {{ (request()->segment(1) == 'drivers') ? 'active' : ''}}">
+    <a class="nav-link" href="{{ route('admin.drivers.index') }}">
+      <i class="fas fa-user-tie"></i>
+      <span>Drivers</span></a>
   </li>
 
   <!-- Divider -->
