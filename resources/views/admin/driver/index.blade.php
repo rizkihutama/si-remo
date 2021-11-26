@@ -1,21 +1,21 @@
 @extends('layouts.app-admin')
-@section('pageTitle', 'Car Brands')
+@section('pageTitle', 'Drivers')
 @section('content')
 <!-- Page Heading -->
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-  <h1 class="h3 mb-0 text-gray-800">Car Brands</h1>
+  <h1 class="h3 mb-0 text-gray-800">Drivers</h1>
 </div>
 
 <!-- Content Row -->
 <div class="card shadow mb-4">
   <div class="card-header py-3">
-    <ul class="nav nav-pills car-header-pills justify-content-between">
+    <ul class="nav nav-pills card-header-pills justify-content-between">
       <li class="nav-item">
-        <h6 class="m-0 font-weight-bold text-primary nav-link">Car Brands</h6>
+        <h6 class="m-0 font-weight-bold text-primary nav-link">Drivers</h6>
       </li>
       <li class="nav-item">
-        <a href="{{ route('admin.car-brands.create') }}" class="btn btn-sm btn-primary nav-link">
-          <i class="fas fa-plus"></i>&nbsp;&nbsp; Add Brands</a>
+        <A href="{{ route('admin.drivers.create') }}" class="btn btn-primary btn-sm nav-link">
+          <i class="fas fa-plus"></i>&nbsp;&nbsp; Add Driver</a>
       </li>
     </ul>
   </div>
@@ -38,10 +38,10 @@
 
 @push('script')
 <!-- Page level plugins -->
-<script src="{{ asset('vendor/datatables/jquery.dataTables.min.js') }}"></script>
-<script src="{{ asset('vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
-<script src="https://cdn.datatables.net/responsive/2.2.7/js/dataTables.responsive.min.js"></script>
-<script src="https://cdn.datatables.net/responsive/2.2.7/js/responsive.bootstrap4.min.js"></script>
+<script defer src="{{ asset('vendor/datatables/jquery.dataTables.min.js') }}"></script>
+<script defer src="{{ asset('vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
+<script defer src="https://cdn.datatables.net/responsive/2.2.7/js/dataTables.responsive.min.js"></script>
+<script defer src="https://cdn.datatables.net/responsive/2.2.7/js/responsive.bootstrap4.min.js"></script>
 
 <!-- Page level custom scripts -->
 {!! $dataTable->scripts() !!}

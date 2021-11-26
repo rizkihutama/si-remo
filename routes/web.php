@@ -4,6 +4,7 @@ use App\Http\Controllers\CarBrandController;
 use App\Http\Controllers\CarController;
 use App\Http\Controllers\CarModelController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DriverController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -42,6 +43,8 @@ Route::middleware('auth')->group(function () {
             Route::resource('/cars', CarController::class)
                 ->names('admin.cars');
         });
+
+        Route::resource('drivers', DriverController::class)->names('admin.drivers');
     });
 
     Route::prefix('model')->group(function () {

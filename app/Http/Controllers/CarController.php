@@ -71,7 +71,7 @@ class CarController extends Controller
                                 <a href='{$editRoute}' class='btn btn-icon btn-primary btn-sm mr-2' title='Edit'>
                                     <i class='far fa-edit icon-nm'></i>
                                 </a>
-                                <form method='POST' action='{$deleteRoute}'>{$csrf}{$method}
+                                <form method='POST' action='{$deleteRoute}' class='delete-form'>{$csrf}{$method}
                                     <button class='btn btn-icon btn-danger btn-sm' title='Delete' onclick=\"return deleteAlert(event)\">
                                         <i class='far fa-trash-alt icon-nm'></i>
                                     </button>
@@ -274,7 +274,7 @@ class CarController extends Controller
         DB::beginTransaction();
         try {
             $car->delete();
-            File::delete($car->image);
+            FileHelper::delete($car->image);
 
             DB::commit();
         } catch (\Throwable $e) {
