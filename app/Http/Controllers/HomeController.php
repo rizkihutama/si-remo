@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Car;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -12,11 +13,15 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index()
+    public function index(Request $request)
     {
         // if (auth()->user()->role == User::ROLE_ADMIN) {
         //     return redirect()->route('admin.dashboard');
         // }
-        return view('home.index');
+
+        $cars = Car::all();
+        $totalCars = $cars->count();
+
+        return view('home.index', compact('cars', 'totalCars'));
     }
 }

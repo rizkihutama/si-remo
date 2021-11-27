@@ -36,7 +36,7 @@
       <div id="content-wrapper" class="d-flex flex-column">
 
         <!-- Main Content -->
-        <div id="content">
+        <div id="content" class="mb-5">
 
           <!-- Topbar -->
           @include('layouts.includes._topbar')

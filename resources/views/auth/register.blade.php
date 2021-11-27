@@ -11,7 +11,7 @@
 
             <div class="form-group">
                 <input type="text" class="form-control form-control-user @error('name') is-invalid @enderror" id="name"
-                    name="name" placeholder="Name" required>
+                    name="name" placeholder="Name" value="{{ old('name') }}" required>
 
                 @error('name')
                 <span class="invalid-feedback" role="alert">
@@ -23,7 +23,7 @@
                 <input type="number" class="form-control form-control-user @error('phone') is-invalid @enderror"
                     id="phone" name="phone" placeholder="Phone Number"
                     oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0,this.maxLength);"
-                    maxlength="13" required>
+                    maxlength="13" value="{{ old('phone') }}" required>
 
                 @error('phone')
                 <span class="invalid-feedback" role="alert">

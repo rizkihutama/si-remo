@@ -5,6 +5,7 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use phpDocumentor\Reflection\Types\Float_;
 
 abstract class BaseModel extends Model
 {
@@ -114,6 +115,8 @@ abstract class BaseModel extends Model
 
   public static function rupiah($price)
   {
-    return 'Rp.' . number_format($price, 0, ',', '.');
+    if (is_float($price)) return 'Rp.' . number_format($price, 0, ',', '.');
+
+    return 'Rp.' . number_format(floatval($price), 0, ',', '.');
   }
 }

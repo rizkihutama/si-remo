@@ -102,6 +102,12 @@ class Car extends BaseModel
         return strtoupper($car);
     }
 
+    public static function findByPriceOrder(String $order = null)
+    {
+        $data = self::orderBy('price', $order);
+        return $data->get();
+    }
+
     public function carBrand()
     {
         return $this->belongsTo(CarBrand::class, 'brand_id', 'brand_id');

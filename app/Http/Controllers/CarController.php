@@ -155,7 +155,7 @@ class CarController extends Controller
 
             $brandName = CarBrand::findOrFail($request->brand_id)->brand_name;
             $modelName = CarModel::findOrFail($request->model_id)->model_name;
-            $carName = $brandName . ' ' . $modelName . ' ' . $request->year;
+            $carName = $brandName . ' ' . $modelName;
 
             $car->name = $carName;
             $imageName = FileHelper::upload($request->file('image'), Car::getImgPath());
@@ -248,7 +248,7 @@ class CarController extends Controller
             $car->fill($request->all());
             $brandName = CarBrand::findOrFail($request->brand_id)->brand_name;
             $modelName = CarModel::findOrFail($request->model_id)->model_name;
-            $carName = $brandName . ' ' . $modelName . ' ' . $request->year;
+            $carName = $brandName . ' ' . $modelName;
 
             $car->name = $carName;
             $car->image = $newFile ?? $oldFile;
