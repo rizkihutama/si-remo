@@ -5,6 +5,7 @@ namespace App\Models;
 use Collective\Html\Eloquent\FormAccessible;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Car extends BaseModel
 {
@@ -102,10 +103,66 @@ class Car extends BaseModel
         return strtoupper($car);
     }
 
-    public static function findByPriceOrder(String $order = null)
+    public function scopePriceOrder($query, String $order = null)
     {
-        $data = self::orderBy('price', $order);
-        return $data->get();
+        return $query->orderBy($this->table . '.price', $order);
+    }
+
+    public function scopeStatusAvailable($query)
+    {
+        return $query->where($this->table . '.status', self::STATUS_AVAILABLE);
+    }
+
+    public function scopeFilterLessThenFiveSeats($query)
+    {
+        return $query->where($this->table . '.seats', '<', 5);
+    }
+
+    public function scopeFilterFiveToSixSeats($query)
+    {
+        return $query->whereBetween($this->table . '.seats', [5, 6]);
+    }
+
+    public function scopeFIlterMoreThenSixSeats($query)
+    {
+        return $query->where($this->table . '.seats', '>', 6);
+    }
+
+    public static function getCars($price = null, $seats = null, $brands = null, $models = null)
+    {
+        // $cars = DB::table('cars')->where('status', self::STATUS_AVAILABLE);
+        $cars = self::statusAvailable();
+
+        if ($price) {
+            switch ($price) {
+                case 'low_price':
+                    $cars = $cars->priceOrder('ASC');
+                    // $cars = $cars->orderBy('price', 'ASC');
+                    break;
+                case 'high_price':
+                    $cars = $cars->priceOrder('DESC');
+                    // $cars = $cars->orderBy('price', 'DESC');
+                    break;
+            }
+        }
+        if ($seats) {
+            switch ($seats) {
+                case 'less_then_five_seats':
+                    $cars = $cars->filterLessThenFiveSeats();
+                    // $cars = $cars->where('seats', '<', 5);
+                    break;
+                case 'five_to_six_seats':
+                    $cars = $cars->filterFiveToSixSeats();
+                    // $cars = $cars->whereBetween('seats', [5, 6]);
+                    break;
+                case 'more_then_six_seats':
+                    $cars = $cars->filterMoreThenSixSeats();
+                    // $cars = $cars->where('seats', '>', 6);
+                    break;
+            }
+        }
+
+        return $cars->get();
     }
 
     public function carBrand()

@@ -6,7 +6,6 @@ use App\Http\Controllers\CarModelController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DriverController;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\SortCarPriceController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -49,12 +48,7 @@ Route::middleware('auth')->group(function () {
     Route::prefix('model')->group(function () {
         Route::get('dropdown', [CarModelController::class, 'dropdown'])->name('model.dropdown');
     });
-    // Route::get('/user', [HomeController::class, 'index'])->name('user');
-    // Route::get('/user/profile', [HomeController::class, 'profile'])->name('user.profile');
 });
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::prefix('price')->group(function () {
-    Route::get('low', [SortCarPriceController::class, 'sortFromLowPrice'])->name('sortCarFromLowPrice');
-    Route::get('high', [SortCarPriceController::class, 'sortFromHighPrice'])->name('sortCarFromHighPrice');
-});
+Route::get('filter', [HomeController::class, 'carsFilter'])->name('carsFilter');
