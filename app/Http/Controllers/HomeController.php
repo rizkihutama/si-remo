@@ -3,25 +3,31 @@
 namespace App\Http\Controllers;
 
 use App\Models\Car;
-use App\Models\User;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
     /**
-     * Show the application dashboard.
+     * Show the application home.
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function index(Request $request)
     {
-        // if (auth()->user()->role == User::ROLE_ADMIN) {
-        //     return redirect()->route('admin.dashboard');
-        // }
-
-        $cars = Car::all();
+        $cars = Car::getCars();
         $totalCars = $cars->count();
 
         return view('home.index', compact('cars', 'totalCars'));
+    }
+
+    public function carsFilter(Request $request)
+    {
+        $price = $request->price;
+        $seats = $request->seats;
+
+        if ($request->ajax()) {
+            $cars = Car::getCars($price, $seats);
+            return response()->json($cars);
+        }
     }
 }
