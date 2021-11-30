@@ -164,11 +164,11 @@
 
     <!-- Nav Item - User Information -->
     @guest
-    <li class="nav-item">
-      <a href="{{ route('login') }}" class="btn btn-primary">Login
+    <div class="form-inline">
+      <a href="{{ route('login') }}" role="button" class="btn btn-primary">Login
         <i class="fas fa-sign-in-alt"></i>
       </a>
-    </li>
+    </div>
     @endguest
 
     @auth

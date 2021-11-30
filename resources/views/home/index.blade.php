@@ -12,44 +12,59 @@
       <ul class="list-group list-group-flush">
         <li class="list-group-item">
           <h5>Kapasitas Penumpang</h5>
-          <div class="row no-gutters">
+          <div class="row row-cols-3 my-3">
+            <div class="col-lg-3 col-md-4 col">
+              <button class="btn btn-seats btn-outline-primary all-seats btn-sm" data-seats="all-seats" id="all-seats">
+                Semua
+              </button>
+            </div>
             <div class="col">
-              <button class="btn btn-outline-primary less-then-five-seats btn-sm" data-seats="less_then_five_seats"
-                id="less-then-five-seats">
+              <button class="btn btn-seats btn-outline-primary less-then-five-seats btn-sm ls"
+                data-seats="less_then_five_seats" id="less-then-five-seats">
                 &lt; 5 Penumpang
               </button>
             </div>
             <div class="col">
-              <button class="btn btn-outline-primary five-to-six-seats btn-sm" data-seats="five_to_six_seats"
-                id="five-to-six-seats">
+              <button class="btn btn-seats btn-outline-primary five-to-six-seats btn-sm ft"
+                data-seats="five_to_six_seats" id="five-to-six-seats">
                 5-6 Penumpang
               </button>
             </div>
             <div class="col">
-              <button class="btn btn-outline-primary more-than-six-seats btn-sm" data-seats="more_then_six_seats"
-                id="more-then-six-seats">
+              <button class="btn btn-seats btn-outline-primary more-than-six-seats btn-sm mt"
+                data-seats="more_then_six_seats" id="more-then-six-seats">
                 &gt; 6 Penumpang
               </button>
             </div>
           </div>
         </li>
         <li class="list-group-item">
-          <h5>Merek Mobil</h5>
-          <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-            <label class="form-check-label" for="defaultCheck1">
-              Default checkbox
-            </label>
+          <h5>Merek</h5>
+          @foreach ($brands as $brand)
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input brands" value="{{ $brand->brand_id }}"
+              id="{{ $brand->brand_name }}">
+            <label class="custom-control-label" for="{{ $brand->brand_name }}">{{ $brand->brand_name }}</label>
           </div>
+          @endforeach
         </li>
-        <li class="list-group-item">A third item</li>
+        <li class="list-group-item">
+          <h5>Model</h5>
+          @foreach ($models as $model)
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input models" value="{{ $model->model_id }}"
+              id="{{ $model->model_name }}">
+            <label class="custom-control-label" for="{{ $model->model_name }}">{{ $model->model_name }}</label>
+          </div>
+          @endforeach
+        </li>
       </ul>
     </div>
   </div>
   <div class="col-lg-8 col-md-8">
     <div class="row header-mobil">
       <div class="col-auto mr-auto">
-        <p>{{ $totalCars }} Mobil</p>
+        <p id="totalCars">{{ $totalCars }} Mobil</p>
       </div>
       <div class="col-auto">
         <div class="dropdown mb-4">
@@ -79,15 +94,63 @@
 
 @push('style')
 <style>
+  /* .cars-card {
+    cursor: pointer;
+  } */
+
   .cars-image {
     height: 100%;
     width: 100%;
     object-fit: contain;
   }
 
+  .btn-outline-primary:focus {
+    box-shadow: none !important;
+  }
+
+  .custom-control-input:focus~.custom-control-label::before {
+    box-shadow: none !important;
+  }
+
+  .btn-seats:hover {
+    color: #fff !important;
+    background-color: #4e73df !important;
+    border-color: #4e73df !important;
+  }
+
   @media screen and (max-width: 768px) {
     .header-mobil {
       margin-top: 30px;
+    }
+  }
+
+  @media screen and (max-width: 268px) {
+    .ls {
+      margin-top: 20px;
+    }
+  }
+
+  @media screen and (max-width: 1090px) and (min-width: 767px) {
+    .ft {
+      margin-top: 20px
+    }
+  }
+
+  @media screen and (max-width: 386px) {
+    .ft {
+      margin-top: 20px
+    }
+  }
+
+  @media screen and (min-width: 768px) {
+    .mt {
+      margin-top: 20px;
+    }
+  }
+
+  @media screen and (max-width: 503px) {
+    .mt {
+      margin-top: 20px;
     }
   }
 
@@ -100,11 +163,14 @@
     const checkLp = $('.checkLp').css('display', 'none');
     const checkHp = $('.checkHp').css('display', 'none');
 
-    const lt = $('#less-then-five-seats');
-    const fs = $('#five-to-six-seats');
-    const mt = $('#more-then-six-seats');
-
+    // keep data all filters and pass it to backend : obj
     var data = {};
+
+    // keep data from brands checkbox filter and merge it to var data : array
+    var brandsData = [];
+
+    // keep data from models checkbox filter and merge it to var data : array
+    var modelsData = [];
 
     $('#low-price').click(function () {
       price = $(this).data('price');
@@ -127,26 +193,39 @@
       ajaxCall(data);
     });
 
+    $('#all-seats').click(function() {
+      seats = $(this).data('seats');
+      data['seats'] = seats;
+
+      $(this).parent().parent().find('.btn-seats').css({
+        'color': '#4e73df',
+        'background-color': '#fff',
+        'border-color': '#4e73df',
+      });
+
+      $(this).css({
+        'color': '#fff',
+        'background-color': '#6c757d',
+        'border-color': '#6c757d',
+      });
+
+      ajaxCall(data);
+    });
+
     $('#less-then-five-seats').click(function () {
       seats = $(this).data('seats');
       data['seats'] = seats;
 
-      if (seats == 'less_then_five_seats') {
-        lt.css({
-          'color': '#fff',
-          'background-color': '#4e73df',
-          'border-color': '#4e73df',
-        });
-      }
-
-      fs.css({
+      $(this).parent().parent().find('.btn-seats').css({
         'color': '#4e73df',
         'background-color': '#fff',
+        'border-color': '#4e73df',
       });
 
-      mt.css({
-        'color': '#4e73df',
-        'background-color': '#fff',
+      $(this).css({
+        'color': '#fff',
+        'background-color': '#6c757d',
+        'border-color': '#6c757d',
       });
 
       ajaxCall(data);
@@ -156,22 +235,16 @@
       seats = $(this).data('seats');
       data['seats'] = seats;
       
-      if (seats == 'five_to_six_seats') {
-        fs.css({
-          'color': '#fff',
-          'background-color': '#4e73df',
-          'border-color': '#4e73df',
-        });
-      }
-
-      lt.css({
+      $(this).parent().parent().find('.btn-seats').css({
         'color': '#4e73df',
         'background-color': '#fff',
+        'border-color': '#007bff',
       });
 
-      mt.css({
-        'color': '#4e73df',
-        'background-color': '#fff',
+      $(this).css({
+        'color': '#fff',
+        'background-color': '#6c757d',
+        'border-color': '#6c757d',
       });
 
       ajaxCall(data);
@@ -180,28 +253,47 @@
     $('#more-then-six-seats').click(function () {
       seats = $(this).data('seats');
       data['seats'] = seats;
-      
-      if (seats == 'more_then_six_seats') {
-        mt.css({
-          'color': '#fff',
-          'background-color': '#4e73df',
-          'border-color': '#4e73df',
-        });
+
+      $(this).parent().parent().find('.btn-seats').css({
+        'color': '#4e73df',
+        'background-color': '#fff',
+        'border-color': '#007bff',
+      });
+
+      $(this).css({
+        'color': '#fff',
+        'background-color': '#6c757d',
+        'border-color': '#6c757d',
+      });
+
+      ajaxCall(data);
+
+    });
+
+    $('.brands').click(function () {
+      if ($(this).is(':checked')) {
+        brandsData.push($(this).val());
+        data['brands'] = brandsData;
+      } else {
+        brandsData.splice(brandsData.indexOf($(this).val()), 1);
+        data['brands'] = brandsData;
       }
-
-      lt.css({
-        'color': '#4e73df',
-        'background-color': '#fff',
-      });
-
-      fs.css({
-        'color': '#4e73df',
-        'background-color': '#fff',
-      });
 
       ajaxCall(data);
     });
 
+    $('.models').click(function () {
+      if ($(this).is(':checked')) {
+        modelsData.push($(this).val());
+        data['models'] = modelsData;
+      } else {
+        modelsData.splice(modelsData.indexOf($(this).val()), 1);
+        data['models'] = modelsData;
+      }
+
+      ajaxCall(data);
+    });
+  
   });
 
   function ajaxCall(data) {
@@ -213,13 +305,28 @@
       data: { 
         'price': data.price,
         'seats': data.seats,
+        'brands': data.brands,
+        'models': data.models,
       },
       success: function (result) {
-        result.forEach(function (car) {
+        $('#totalCars').html(`${result.totalCars} Mobil`);
+        if (result['cars'].length < 1) {
+          $('.cars-data').append(
+            `<div class="col-12">
+              <div class="alert alert-danger text-center" role="alert">
+                <h4 class="alert-heading">Maaf</h4>
+                <p>Tidak ada mobil yang sesuai dengan kriteria anda.</p>
+              </div>
+            </div>`
+          );
+        }
+
+        result['cars'].forEach(function (car) {
           $('.cars-data').append('<div class="row"><div class="col-lg-12"><div class="card mb-3"><div class="row no-gutters"><div class="col-lg-4 col-md-4 col-sm-4"><img src="{{ url("/storage/cars/") }}' + '/' + car.image + '" class="card-img-top cars-image"alt=" ' + car.name + ' "></div><div class="col-lg-4 col-md-4 col-sm-4"><div class="card-body"><h5 class="card-title text-dark">' + car.name + '</h5><span class="d-flex flex-row"><p class="card-text p-2 text-dark" style="cursor: pointer;" data-toggle="tooltip" data-placement="bottom" title=" ' + car.seats + ' "><i class="far fa-user-circle"></i>&nbsp;&nbsp;' + car.seats + '</p><p class="card-text p-2 text-dark"> - </p><p class="card-text p-2 text-dark" style="cursor: pointer;" data-toggle="tooltip"data-placement="bottom" title=" ' + car.luggage + ' "><i class="fas fa-suitcase-rolling"></i class=>&nbsp;&nbsp;' + car.luggage + '</p></span></div></div><div class="col-lg-4 col-md-4 col-sm-4"><div class="card-body"><div class="d-flex flex-row mb-4"><h5 class="card-title text-success">' + formatRupiah(car.price) + '</h5><span>/hari</span></div><a href="#" class="btn btn-primary btn-lg btn-block">Pilih</a></div></div></div></div></div></div>');
         });
-      }, error: function (error) {
-        console.log(error);
+      }, 
+      error: function (textStatus, errorThrown) {
+        console.log(textStatus, errorThrown);
       }
     });
   }
