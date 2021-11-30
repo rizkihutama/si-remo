@@ -87,6 +87,13 @@
 
     @include('sweetalert2.sweetalert2')
     @stack('script')
+    <script>
+      $(document).ready(function() {
+        if ($(window).width() < 768) {
+          $('#sidebarToggleTop').click();
+        }
+      });
+    </script>
   </body>
 
 </html>

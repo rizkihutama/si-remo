@@ -159,7 +159,16 @@ class Car extends BaseModel
                     $cars = $cars->filterMoreThenSixSeats();
                     // $cars = $cars->where('seats', '>', 6);
                     break;
+                default:
+                    $cars = $cars;
+                    break;
             }
+        }
+        if ($brands) {
+            $cars = $cars->whereIn('brand_id', $brands);
+        }
+        if ($models) {
+            $cars = $cars->whereIn('model_id', $models);
         }
 
         return $cars->get();
