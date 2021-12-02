@@ -24,6 +24,14 @@
     <!-- Custom styles for this template-->
     <link href="{{ asset('assets/css/sb-admin-2.min.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('vendor/sweetalert2/dist/css/sweetalert2.min.css') }}">
+    <style>
+      @media screen and (min-width: 1200px) {
+        .container {
+          max-width: 1240px !important;
+        }
+      }
+
+    </style>
     @stack('style')
   </head>
 
@@ -43,7 +51,7 @@
           <!-- End of Topbar -->
 
           <!-- Begin Page Content -->
-          <div class="container-fluid">
+          <div class="container">
 
             <!-- Page Heading -->
             @yield('content')

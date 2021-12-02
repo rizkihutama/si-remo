@@ -54,6 +54,13 @@
       <span>Drivers</span></a>
   </li>
 
+  <!-- Banks -->
+  <li class="nav-item {{ (request()->segment(1) == 'banks') ? 'active' : ''}}">
+    <a class="nav-link" href="{{ route('admin.banks.index') }}">
+      <i class="fas fa-money-check-alt"></i>
+      <span>Banks</span></a>
+  </li>
+
   <!-- Divider -->
   <hr class="sidebar-divider d-none d-md-block">
 
