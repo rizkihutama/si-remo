@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\BankController;
+use App\Http\Controllers\BookingController;
 use App\Http\Controllers\CarBrandController;
 use App\Http\Controllers\CarController;
 use App\Http\Controllers\CarModelController;
@@ -43,12 +45,23 @@ Route::middleware('auth')->group(function () {
         });
 
         Route::resource('drivers', DriverController::class)->names('admin.drivers');
+        Route::resource('banks', BankController::class)->names('admin.banks');
     });
 
     Route::prefix('model')->group(function () {
         Route::get('dropdown', [CarModelController::class, 'dropdown'])->name('model.dropdown');
     });
+
+    Route::middleware('isCarAvaillable')
+        ->get('car-booking/{car}', [BookingController::class, 'carBooking'])
+        ->name('car-booking');
+    Route::post('car-booking-create', [BookingController::class, 'carBookingCreate'])->name('car-booking.create');
 });
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::middleware('isCarAvaillable')
+    ->get('car-detail/{car}', [BookingController::class, 'carDetail'])
+    ->name('car-detail');
+
+// ajax request for car filter
 Route::get('filter', [HomeController::class, 'carsFilter'])->name('carsFilter');

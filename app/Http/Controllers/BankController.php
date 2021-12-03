@@ -2,14 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\CarModel;
+use App\Models\Bank;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Redirect;
 use Yajra\DataTables\Facades\DataTables;
 use Yajra\DataTables\Html\Builder;
 
-class CarModelController extends Controller
+class BankController extends Controller
 {
     protected $htmlbuilder;
 
@@ -21,8 +19,9 @@ class CarModelController extends Controller
     private function validateRequest(Request $request)
     {
         return $request->validate([
-            'brand_id' => 'required',
-            'model_name' => 'required'
+            'name' => 'required|string',
+            'account_number' => 'required|numeric|digits_between:10,16',
+            'account_name' => 'required|string',
         ]);
     }
 
@@ -34,12 +33,13 @@ class CarModelController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = CarModel::all();
+            $data = Bank::all();
             $datatables = DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
-                    $editRoute = route('admin.car-models.edit', ['car_model' => $row]);
-                    $showRoute = route('admin.car-models.show', ['car_model' => $row]);
+                    $showRoute = route('admin.banks.show', ['bank' => $row]);
+                    $editRoute = route('admin.banks.edit', ['bank' => $row]);
+                    $deleteRoute = route('admin.banks.destroy', ['bank' => $row]);
                     $csrf = csrf_field();
                     $method = method_field('DELETE');
                     $btn = "<div class='d-flex'>
@@ -49,12 +49,14 @@ class CarModelController extends Controller
                                 <a href='{$editRoute}' class='btn btn-icon btn-primary btn-sm mr-2' title='Edit'>
                                     <i class='far fa-edit icon-nm'></i>
                                 </a>
+                                <form method='POST' action='{$deleteRoute}' class='delete-form'>{$csrf}{$method}
+                                    <button class='btn btn-icon btn-danger btn-sm' title='Delete' onclick=\"return deleteAlert(event)\">
+                                        <i class='far fa-trash-alt icon-nm'></i>
+                                    </button>
+                                </form>
                             </div>";
 
                     return $btn;
-                })
-                ->editColumn('brand_id', function ($row) {
-                    return $row->carBrand->brand_name;
                 })
                 ->rawColumns(['action']);
             return $datatables->make(true);
@@ -80,11 +82,12 @@ class CarModelController extends Controller
                 'responsive' => true,
             ])
             ->addColumn(['data' => 'DT_RowIndex', 'name' => 'DT_RowIndex', 'title' => '#', 'orderable' => false, 'searchable' => false, 'width' => 30])
-            ->addColumn(['data' => 'model_name', 'name' => 'model_name', 'title' => 'Model'])
-            ->addColumn(['data' => 'brand_id', 'name' => 'brand_id', 'title' => 'Brand'])
+            ->addColumn(['data' => 'name', 'name' => 'name', 'title' => 'Car Name'])
+            ->addColumn(['data' => 'account_number', 'name' => 'account_number', 'title' => 'No. Rekening'])
+            ->addColumn(['data' => 'account_name', 'name' => 'account_name', 'title' => 'Pemilik Rekening'])
             ->addColumn(['data' => 'action', 'name' => 'action', 'title' => 'Aksi', 'orderable' => false, 'searchable' => false, 'width' => 100, 'exportable' => false]);
 
-        return view('admin.car-model.index', compact('dataTable'));
+        return view('admin.bank.index', compact('dataTable'));
     }
 
     /**
@@ -94,7 +97,7 @@ class CarModelController extends Controller
      */
     public function create()
     {
-        return view('admin.car-model.create');
+        return view('admin.bank.create');
     }
 
     /**
@@ -105,87 +108,58 @@ class CarModelController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validateRequest($request);
+        $validated = $this->validateRequest($request);
 
-        DB::beginTransaction();
-        try {
-            $carModel = new CarModel;
-            $carModel->fill($request->all());
-            $carModel->save();
+        $bank = Bank::create($validated);
 
-            DB::commit();
-        } catch (\Throwable $e) {
-            DB::rollBack();
-
-            return Redirect::back()->with('error', $e->getMessage() . ' : ' . $e->getLine());
-        }
-
-        return redirect()->route('admin.car-models.index')->with('success', 'Model added success');
+        return redirect()->route('admin.banks.index')->with('success', 'Data Bank Berhasil Ditambahkan');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\CarModel  $carModel
+     * @param  \App\Models\Bank  $bank
      * @return \Illuminate\Http\Response
      */
-    public function show(CarModel $carModel)
+    public function show(Bank $bank)
     {
-        return view('admin.car-model.show', compact('carModel'));
+        return view('admin.bank.show', compact('bank'));
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\CarModel  $carModel
+     * @param  \App\Models\Bank  $bank
      * @return \Illuminate\Http\Response
      */
-    public function edit(CarModel $carModel)
+    public function edit(Bank $bank)
     {
-        return view('admin.car-model.edit', compact('carModel'));
+        return view('admin.bank.edit', compact('bank'));
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\CarModel  $carModel
+     * @param  \App\Models\Bank  $bank
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, CarModel $carModel)
+    public function update(Request $request, Bank $bank)
     {
-        $this->validateRequest($request);
-
-        DB::beginTransaction();
-        try {
-            $carModel->fill($request->all());
-            $carModel->save();
-
-            DB::commit();
-        } catch (\Throwable $e) {
-            DB::rollBack();
-
-            return Redirect::back()->with('error', $e->getMessage() . ' : ' . $e->getLine());
-        }
-
-        return redirect()->route('admin.car-models.index')->with('success', 'Model updated success');
+        $validated = $this->validateRequest($request);
+        $bank->update($validated);
+        return redirect()->route('admin.banks.index')->with('success', 'Data Bank Berhasil Diubah');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\CarModel  $carModel
+     * @param  \App\Models\Bank  $bank
      * @return \Illuminate\Http\Response
      */
-    public function destroy(CarModel $carModel)
+    public function destroy(Bank $bank)
     {
-        //
-    }
-
-    public function dropdown(Request $request)
-    {
-        $model = CarModel::findByBrandId($request->get('brand_id', null));
-
-        return response($model)->header('Content-Type', 'application/json');
+        $bank->delete();
+        return redirect()->route('admin.banks.index')->with('success', 'Data Bank Berhasil Dihapus');
     }
 }

@@ -29,7 +29,7 @@
               <h5 class="card-title text-success">{{ App\Models\Car::rupiah($car->price) }}</h5>
               <span>/hari</span>
             </div>
-            <a href="#" class="btn btn-primary btn-lg btn-block">Pilih</a>
+            <a href="{{ route('car-detail', $car) }}" class="btn btn-primary btn-lg btn-block">Pilih</a>
           </div>
         </div>
       </div>
