@@ -18,7 +18,7 @@ class DriverController extends Controller
         $this->htmlbuilder = $htmlbuilder;
     }
 
-    private function validateClass(Request $request, $driver = null)
+    private function validateRequest(Request $request, $driver = null)
     {
         return $request->validate([
             'name' => 'required|string|max:255',
@@ -121,7 +121,7 @@ class DriverController extends Controller
      */
     public function store(Request $request)
     {
-        $validate = $this->validateClass($request);
+        $validate = $this->validateRequest($request);
 
         DB::beginTransaction();
         try {
@@ -171,7 +171,7 @@ class DriverController extends Controller
      */
     public function update(Request $request, Driver $driver)
     {
-        $validate = $this->validateClass($request, $driver);
+        $validate = $this->validateRequest($request, $driver);
 
         DB::beginTransaction();
         try {

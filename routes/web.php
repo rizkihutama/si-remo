@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\BankController;
-use App\Http\Controllers\CarBookingController;
+use App\Http\Controllers\BookingController;
 use App\Http\Controllers\CarBrandController;
 use App\Http\Controllers\CarController;
 use App\Http\Controllers\CarModelController;
@@ -52,12 +52,16 @@ Route::middleware('auth')->group(function () {
         Route::get('dropdown', [CarModelController::class, 'dropdown'])->name('model.dropdown');
     });
 
-    Route::get('car-booking/{car}', [CarBookingController::class, 'carBooking'])->name('car-booking');
-    Route::post('car-checkout', [CarBookingController::class, 'carCheckout'])->name('car-checkout');
+    Route::middleware('isCarAvaillable')
+        ->get('car-booking/{car}', [BookingController::class, 'carBooking'])
+        ->name('car-booking');
+    Route::post('car-booking-create', [BookingController::class, 'carBookingCreate'])->name('car-booking.create');
 });
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('car-detail/{car}', [CarBookingController::class, 'carDetail'])->name('car-detail');
+Route::middleware('isCarAvaillable')
+    ->get('car-detail/{car}', [BookingController::class, 'carDetail'])
+    ->name('car-detail');
 
 // ajax request for car filter
 Route::get('filter', [HomeController::class, 'carsFilter'])->name('carsFilter');

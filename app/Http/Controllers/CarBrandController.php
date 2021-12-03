@@ -18,7 +18,7 @@ class CarBrandController extends Controller
         $this->htmlbuilder = $htmlbuilder;
     }
 
-    private function validateClass(Request $request)
+    private function validateRequest(Request $request)
     {
         return $request->validate([
             'brand_name' => 'required',
@@ -100,7 +100,7 @@ class CarBrandController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $this->validateClass($request);
+        $validated = $this->validateRequest($request);
 
         DB::beginTransaction();
         try {
@@ -149,7 +149,7 @@ class CarBrandController extends Controller
      */
     public function update(Request $request, CarBrand $carBrand)
     {
-        $validated = $this->validateClass($request);
+        $validated = $this->validateRequest($request);
 
         DB::beginTransaction();
         try {

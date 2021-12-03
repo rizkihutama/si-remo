@@ -1,21 +1,50 @@
 <div class="row">
   <div class="col-lg-6">
-    {!! Form::label('pick_up_location', 'Lokasi Jemput') !!}
-    {!! Form::textarea('pick_up_location', null, [
-    'class' => $errors->has('pick_up_location') ? 'form-control is-invalid datepicker' : 'form-control',
-    'placeholder' => 'Lokasi Jemput',
-    'rows' => 3,
-    'required' => true,
-    ]) !!}
+    <div class="form-group">
+      {!! Form::label('pickup_location', 'Lokasi Jemput') !!}
+      {!! Form::textarea('pickup_location', null, [
+      'class' => $errors->has('pickup_location') ? 'form-control is-invalid datepicker' : 'form-control',
+      'placeholder' => 'Lokasi Jemput',
+      'rows' => 3,
+      'required' => true,
+      ]) !!}
+    </div>
   </div>
   <div class="col-lg-6">
-    {!! Form::label('pick_up_time', 'Waktu Jemput') !!}
-    {!! Form::text('pick_up_time', null, [
-    'class' => $errors->has('pick_up_time') ? 'form-control is-invalid datepicker bs-timepicker' : 'form-control
-    bs-timepicker',
-    'placeholder' => 'Waktu Jemput',
-    'required' => true,
-    ]) !!}
+    <div class="form-group">
+      {!! Form::label('pickup_time', 'Waktu Jemput') !!}
+      {!! Form::text('pickup_time', null, [
+      'class' => $errors->has('pickup_time') ? 'form-control is-invalid datepicker bs-timepicker' : 'form-control
+      bs-timepicker',
+      'placeholder' => 'Waktu Jemput',
+      'required' => true,
+      ]) !!}
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-lg-6">
+    <div class="form-group">
+      {!! Form::label('dropoff_location', 'Lokasi Antar') !!}
+      {!! Form::textarea('dropoff_location', null, [
+      'class' => $errors->has('dropoff_location') ? 'form-control is-invalid datepicker' : 'form-control',
+      'placeholder' => 'Lokasi Antar',
+      'rows' => 3,
+      'required' => true,
+      ]) !!}
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="form-group">
+      {!! Form::label('dropoff_time', 'Waktu Antar') !!}
+      {!! Form::text('dropoff_time', null, [
+      'class' => $errors->has('dropoff_time') ? 'form-control is-invalid datepicker bs-timepicker' : 'form-control
+      bs-timepicker',
+      'placeholder' => 'Waktu Antar',
+      'required' => true,
+      ]) !!}
+    </div>
   </div>
 </div>
 

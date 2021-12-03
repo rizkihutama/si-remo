@@ -18,7 +18,7 @@ class CarModelController extends Controller
         $this->htmlbuilder = $htmlbuilder;
     }
 
-    private function validateClass(Request $request)
+    private function validateRequest(Request $request)
     {
         return $request->validate([
             'brand_id' => 'required',
@@ -105,7 +105,7 @@ class CarModelController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validateClass($request);
+        $this->validateRequest($request);
 
         DB::beginTransaction();
         try {
@@ -154,7 +154,7 @@ class CarModelController extends Controller
      */
     public function update(Request $request, CarModel $carModel)
     {
-        $this->validateClass($request);
+        $this->validateRequest($request);
 
         DB::beginTransaction();
         try {
