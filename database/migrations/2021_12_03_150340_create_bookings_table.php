@@ -23,12 +23,11 @@ class CreateBookingsTable extends Migration
                 ->cascadeOnUpdate();
             $table->smallInteger('with_driver');
             $table->foreignId('driver_id')
+                ->nullable()
                 ->constrained('drivers', 'driver_id')
-                ->cascadeOnUpdate()
-                ->nullable();
-            $table->foreignId('bank_id')
-                ->constrained('banks', 'bank_id')
                 ->cascadeOnUpdate();
+            $table->string('code');
+            $table->integer('status');
             $table->date('start_date');
             $table->date('end_date');
             $table->integer('days');

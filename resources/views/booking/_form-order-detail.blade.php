@@ -60,19 +60,6 @@
         ]) !!}
       </div>
     </div>
-    <div class="form-group">
-      {!! Form::label('bank_id', 'Metode Pembayaran - Transfer Bank') !!}
-      {!! Form::select('bank_id', $bank, null, [
-      'class' => $errors->has('bank_id') ? 'form-control is-invalid select2' : 'form-control select2',
-      'placeholder' => '- Pilih Bank -',
-      'required' => true,
-      ]) !!}
-      @error('bank_id')
-      <div class="invalid-feedback">
-        <strong>{{ $message }}</strong>
-      </div>
-      @enderror
-    </div>
     <div class="form-group mt-5">
       <div class="custom-control custom-radio custom-control-inline">
         <input type="radio" id="with_driver_false" name="with_driver" value="{{ $false }}" class="custom-control-input">
