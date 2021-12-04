@@ -88,7 +88,7 @@ abstract class BaseModel extends Model
     return $query->where($this->table . '.status', self::STATUS_ACTIVE);
   }
 
-  public function formatDate($value)
+  public static function formatDate($value)
   {
     return Carbon::createFromFormat('d/m/Y', $value)->format('Y-m-d');
   }

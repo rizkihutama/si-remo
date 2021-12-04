@@ -73,4 +73,9 @@ class Driver extends BaseModel
             return $list[$this->status] ? $list[$this->status] : null;
         }
     }
+
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class, "driver_id", "driver_id");
+    }
 }
