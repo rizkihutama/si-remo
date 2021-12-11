@@ -5,6 +5,7 @@ use App\Http\Controllers\BookingController;
 use App\Http\Controllers\CarBrandController;
 use App\Http\Controllers\CarController;
 use App\Http\Controllers\CarModelController;
+use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DriverController;
 use App\Http\Controllers\HomeController;
@@ -52,10 +53,18 @@ Route::middleware('auth')->group(function () {
         Route::get('dropdown', [CarModelController::class, 'dropdown'])->name('model.dropdown');
     });
 
-    Route::middleware('isCarAvaillable')
-        ->get('car-booking/{car}', [BookingController::class, 'carBooking'])
-        ->name('car-booking');
+    Route::middleware('isCarAvaillable')->group(function () {
+        Route::get('car-booking/{car}', [BookingController::class, 'carBooking'])->name('car-booking');
+    });
     Route::post('car-booking-create', [BookingController::class, 'carBookingCreate'])->name('car-booking.create');
+
+    Route::middleware('userCheckout')->group(function () {
+        Route::get('car-checkout/{checkout}', [CheckoutController::class, 'checkoutBooking'])->name('car-checkout');
+        Route::patch('car-checkout-update/{checkout}', [CheckoutController::class, 'checkoutBookingUpdate'])
+            ->name('car-checkout.update');
+        Route::get('my-checkout/{checkout}', [CheckoutController::class, 'myCheckout'])->name('my-checkout');
+        Route::patch('upload-proof/{checkout}', [CheckoutController::class, 'uploadProof'])->name('upload-proof');
+    });
 });
 
 Route::get('/', [HomeController::class, 'index'])->name('home');

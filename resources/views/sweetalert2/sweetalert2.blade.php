@@ -2,8 +2,8 @@
   //* const for instance sweetalert2 with bootstrap
   const swalWithBootstrapButtons = Swal.mixin({
   customClass: {
-      confirmButton: 'btn btn-success btn-lg mr-3',
-      cancelButton: 'btn btn-danger btn-lg'
+      confirmButton: 'btn btn-success btn-lg',
+      cancelButton: 'btn btn-danger btn-lg mr-3'
   },
   buttonsStyling: false
   })

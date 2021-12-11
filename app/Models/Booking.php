@@ -26,7 +26,6 @@ class Booking extends BaseModel
     protected $guarded = ["booking_id"];
 
     protected $fillable = [
-        'booking_id',
         'user_id',
         'car_id',
         'code',
@@ -55,19 +54,21 @@ class Booking extends BaseModel
         $interval = $startDate->diff($endDate);
         $days = $interval->days;
         ($days == 0) ? $days = 1 : $days;
+        ($start_date !== $end_date) ? $days++ : $days;
         return $days;
     }
 
     public function checkIsWithDriver($value)
     {
-        ($value == self::WITH_DRIVER_TRUE) ? $value = 1 : $value = 0;
+        ($value == self::WITH_DRIVER_TRUE) ? $value = self::WITH_DRIVER_TRUE : $value = self::WITH_DRIVER_FALSE;
         return $value;
     }
 
     public static function getDriverId($value)
     {
-        ($value == self::WITH_DRIVER_TRUE) ? $driver = Driver::inRandomOrder()->first()->driver_id : $driver = null;
-        return $driver;
+        $driverId = Driver::inRandomOrder()->driverAvaillable()->first()->driver_id;
+        ($value == self::WITH_DRIVER_TRUE) ? $driverId : $driverId = null;
+        return $driverId;
     }
 
     public function getTotalPrice($carPrice, $days)
