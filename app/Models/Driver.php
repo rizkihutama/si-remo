@@ -74,6 +74,11 @@ class Driver extends BaseModel
         }
     }
 
+    public function scopeDriverAvaillable($query)
+    {
+        return $query->where('status', self::STATUS_AVAILABLE);
+    }
+
     public function bookings()
     {
         return $this->hasMany(Booking::class, "driver_id", "driver_id");

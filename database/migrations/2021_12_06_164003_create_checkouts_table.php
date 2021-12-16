@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateBookingsTable extends Migration
+class CreateCheckoutsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,11 @@ class CreateBookingsTable extends Migration
      */
     public function up()
     {
-        Schema::create('bookings', function (Blueprint $table) {
-            $table->increments('booking_id');
+        Schema::create('checkouts', function (Blueprint $table) {
+            $table->increments('checkout_id');
+            $table->foreignId('booking_id')
+                ->constrained('bookings', 'booking_id')
+                ->cascadeOnUpdate();
             $table->foreignId('user_id')
                 ->constrained('users', 'user_id')
                 ->cascadeOnUpdate();
@@ -26,15 +29,13 @@ class CreateBookingsTable extends Migration
                 ->nullable()
                 ->constrained('drivers', 'driver_id')
                 ->cascadeOnUpdate();
+            $table->foreignId('bank_id')
+                ->nullable()
+                ->constrained('banks', 'bank_id')
+                ->cascadeOnUpdate();
             $table->string('code')->unique();
-            $table->integer('status');
-            $table->date('start_date');
-            $table->date('end_date');
-            $table->integer('days');
-            $table->text('pickup_location');
-            $table->text('dropoff_location');
-            $table->time('pickup_time');
-            $table->time('dropoff_time');
+            $table->smallInteger('status');
+            $table->string('payment_proof')->nullable();
             $table->decimal('sub_total', 14, 2);
             $table->decimal('total', 14, 2);
             $table->integer('created_by');
@@ -50,6 +51,6 @@ class CreateBookingsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('bookings');
+        Schema::dropIfExists('checkouts');
     }
 }

@@ -17,7 +17,7 @@ class User extends Authenticatable
 
     protected $table = "users";
     protected $primaryKey = "user_id";
-    protected $guarded = ["user_id"];
+    protected $guarded = ["user_id", "role"];
 
     /**
      * The attributes that are mass assignable.
@@ -67,5 +67,10 @@ class User extends Authenticatable
     public function bookings()
     {
         return $this->hasMany(Booking::class, 'user_id', 'user_id');
+    }
+
+    public function checkouts()
+    {
+        return $this->hasMany(Checkout::class, 'user_id', 'user_id');
     }
 }

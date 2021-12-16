@@ -82,7 +82,7 @@
     </div>
   </div>
   <div class="col-lg-8">
-    {!! Form::open(['route' => 'car-booking.create', 'method' => 'POST', 'files' => false]) !!}
+    {!! Form::open(['route' => 'car-booking.create', 'method' => 'POST', 'files' => false, 'id' => 'checkout-form']) !!}
     <div class="card">
       <h5 class="card-header">Detil Pemesanan</h5>
       <div class="card-body">
@@ -96,7 +96,7 @@
         @include('booking._form-rent-detail', ['isNewRecord' => true])
       </div>
     </div>
-    <button type="submit" class="btn btn-primary mt-4">Checkout</button>
+    <button type="submit" onclick="return confirmCheckout(event)" class="btn btn-primary mt-4">Checkout</button>
     {!! Form::close() !!}
   </div>
 </div>
@@ -150,7 +150,7 @@
     const endDateVal = $(this).val();
     const endDateValFormat = moment(endDateVal, ['DD/MM/YYYY'], 'id').format('ddd, DD MMM yyyy');
     endDate = endDateVal;
-    days = moment(endDate, 'DD/MM/YYYY').diff(moment(startDate, 'DD/MM/YYYY'), 'days');
+    days = moment(endDate, 'DD/MM/YYYY').diff(moment(startDate, 'DD/MM/YYYY'), 'days') + 1;
     if (days < 1 || !days) days = 1;
     $('.end_date').text(endDateValFormat);
     $('.days_rent').text(days + ' hari');
@@ -179,6 +179,22 @@
 
     rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
     return prefix == undefined ? (rupiah ? 'Rp.' + rupiah : '') : rupiah;
+  }
+
+  function confirmCheckout(e) {
+    e.preventDefault();
+
+    swalWithBootstrapButtons.fire({
+      title: 'Lanjutkan Pesanan?',
+      text: "Harap periksa lagi data anda!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Ya, checkout!',
+      cancelButtonText: 'Tidak, batalkan!',
+      reverseButtons: true
+    }).then((result) => {
+      if (result.isConfirmed) $('#checkout-form').submit();
+    });
   }
 </script>
 @endpush

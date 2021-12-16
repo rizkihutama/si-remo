@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Booking;
 use App\Models\Car;
+use App\Models\Checkout;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -85,12 +86,25 @@ class BookingController extends Controller
             $booking->sub_total = $car->price;
             $booking->total = $booking->getTotalPrice($car->price, $days);
             $booking->save();
+
+            $checkout = Checkout::create([
+                'booking_id' => $booking->booking_id,
+                'user_id' => $user->user_id,
+                'car_id' => $car->car_id,
+                'with_driver' => $booking->with_driver,
+                'driver_id' => $booking->driver_id,
+                'code' => $booking->code,
+                'status' => Checkout::STATUS_WAITING_PAYMENT,
+                'sub_total' => $booking->sub_total,
+                'total' => $booking->total,
+            ]);
+
             DB::commit();
         } catch (\Throwable $e) {
             DB::rollBack();
             throw $e;
         }
 
-        return redirect()->route('home')->with('success', 'Booking success');
+        return redirect()->route('car-checkout', $checkout->checkout_id);
     }
 }

@@ -30,4 +30,9 @@ class Bank extends BaseModel
         'created_at',
         'updated_at',
     ];
+
+    public function checkouts()
+    {
+        return $this->hasMany(Checkout::class, 'bank_id', 'bank_id');
+    }
 }
