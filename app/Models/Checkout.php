@@ -41,6 +41,46 @@ class Checkout extends BaseModel
         return now()->parse($date)->locale('id')->isoFormat('ddd, D MMM Y');
     }
 
+    public function paymentStatusLabels()
+    {
+        return [
+            self::STATUS_WAITING_PAYMENT => "Menunggu Pembayaran",
+            self::STATUS_PAID => "Lunas",
+            self::STATUS_WAITING_CONFIRMATION => "Menunggu Konfirmasi",
+            self::STATUS_CANCELED => "Dibatalkan",
+        ];
+    }
+
+    public function getPaymentStatusLabelAttribute()
+    {
+        return $this->paymentStatusLabels()[$this->status];
+    }
+
+    public function paymentStatusBadgeLabels()
+    {
+        return [
+            self::STATUS_WAITING_PAYMENT => '<h5><span class="badge badge-warning">Menunggu Pembayaran</span></h5>',
+            self::STATUS_PAID => '<h5><span class="badge badge-success">Lunas</span></h5>',
+            self::STATUS_WAITING_CONFIRMATION => '<h5><span class="badge badge-info">Menunggu Konfirmasi</span></h5>',
+            self::STATUS_CANCELED => '<h5><span class="badge badge-danger">Dibatalkan</span></h5>',
+        ];
+    }
+
+    public function getPaymentStatusBadgeLabelAttribute()
+    {
+        return $this->paymentStatusBadgeLabels()[$this->status];
+    }
+
+    public static function getImgProofPath()
+    {
+        return 'public/proof/';
+    }
+
+    public static function getImgProofUrl($imageName)
+    {
+        return '/storage/proof/' . $imageName;
+    }
+
     public function bookings()
     {
         return $this->belongsTo(Booking::class, "booking_id", "booking_id");

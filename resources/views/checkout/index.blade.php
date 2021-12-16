@@ -1,142 +1,44 @@
 @extends('layouts.app-user')
-@section('pageTitle', 'Checkout')
+@section('pageTitle', 'My Checkout')
 @section('content')
-<nav aria-label="breadcrumb">
-  <ol class="breadcrumb">
-    <li class="breadcrumb-item">Booking</li>
-    <li class="breadcrumb-item active text-primary" aria-current="page">Bayar</li>
-    <li class="breadcrumb-item">Selesai</li>
-  </ol>
-</nav>
+<!-- Page Heading -->
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+  <h1 class="h3 mb-0 text-gray-800">My Checkout</h1>
+</div>
 
-<div class="row">
-  <div class="col-lg-5">
-    <div class="card">
-      <h4 class="card-header">{{ $checkout->cars->name }}</h4>
-      <div class="card-body">
-        <div class="row">
-          <div class="col-lg-12">
-            <img src="{{ $image }}" alt="{{ $checkout->cars->name }}" class="img-fluid"
-              style="border: 1px solid #ccc; padding: 5px; border-radius: 10px;">
-            <hr />
-            <ul class="nav nav-pills card-header-pills justify-content-between">
-              <li class="nav-item">
-                <p class="card-text text-dark nav-link">
-                  Kode Booking
-                </p>
-              </li>
-              <li class="nav-item">
-                <p class="card-text text-dark nav-link">{{ $booking_code }}</p>
-              </li>
-            </ul>
-            <hr />
-            <ul class="nav nav-pills card-header-pills justify-content-between">
-              <li class="nav-item">
-                <p class="card-text text-dark nav-link">
-                  Tanggal Mulai
-                </p>
-              </li>
-              <li class="nav-item">
-                <p class="card-text text-dark nav-link">{{ $start_date }}</p>
-              </li>
-            </ul>
-            <ul class="nav nav-pills card-header-pills justify-content-between">
-              <li class="nav-item">
-                <p class="card-text text-dark nav-link">
-                  Tanggal Selesai
-                </p>
-              </li>
-              <li class="nav-item">
-                <p class="card-text text-dark nav-link">{{ $end_date }}</p>
-              </li>
-            </ul>
-            <ul class="nav nav-pills card-header-pills justify-content-between">
-              <li class="nav-item">
-                <p class="card-text text-dark nav-link">
-                  Durasi
-                </p>
-              </li>
-              <li class="nav-item">
-                <p class="card-text text-dark nav-link">{{ $days }} Hari</p>
-              </li>
-            </ul>
-            <hr />
-            <ul class="nav nav-pills card-header-pills justify-content-between">
-              <li class="nav-item">
-                <p class="card-text text-dark nav-link">
-                  Pajak
-                </p>
-              </li>
-              <li class="nav-item">
-                <p class="card-text text-dark nav-link">{{ $tax }}%</p>
-              </li>
-            </ul>
-            <ul class="nav nav-pills card-header-pills justify-content-between">
-              <li class="nav-item">
-                <p class="card-text text-dark nav-link">
-                  Subtotal
-                </p>
-              </li>
-              <li class="nav-item">
-                <p class="card-text text-dark nav-link">{{ $sub_total }}/hari</p>
-              </li>
-            </ul>
-            <ul class="nav nav-pills card-header-pills justify-content-between">
-              <li class="nav-item">
-                <p class="card-text text-dark nav-link">
-                  Total
-                </p>
-              </li>
-              <li class="nav-item">
-                <p class="card-text text-dark nav-link">{{ $total }}</p>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
+<!-- Content Row -->
+<div class="card shadow mb-4">
+  <div class="card-header py-3">
+    <ul class="nav nav-pills card-header-pills justify-content-between">
+      <li class="nav-item">
+        <h6 class="m-0 font-weight-bold text-primary nav-link">My Checkout</h6>
+      </li>
+    </ul>
   </div>
-  <div class="col-lg-7">
-    {!! Form::model($checkout, ['route' => ['car-checkout.update', $checkout], 'method' => 'PATCH','files' =>
-    false]) !!}
-    <div class="card">
-      <h4 class="card-header">Checkout</h4>
-      <div class="card-body">
-        <div class="row">
-          <div class="col-lg-12">
-            <div class="form-group">
-              {!! Form::label('bank_id', 'Metode Pembayaran - Transfer Bank') !!}
-              {!! Form::select('bank_id', $banks, null, [
-              'class' => $errors->has('bank_id') ? 'form-control is-invalid select2' : 'form-control select2',
-              'placeholder' => '- Pilih Bank -'
-              ]) !!}
-            </div>
-            @error('bank_id')
-            <div class="text-danger">
-              <strong>{{ $message }}</strong>
-            </div>
-            @enderror
-          </div>
-        </div>
-      </div>
+  <div class="card-body">
+    <div class="table-responsive">
+      {!! $dataTable->table([
+      'class'=>'table table-bordered dt-responsive',
+      'id' => 'dataTable',
+      'width' => '100%',
+      'cellspacing' => '0'], false) !!}
     </div>
-    <button type="submit" class="btn btn-primary mt-3">Pilih</button>
-    {!! Form::close() !!}
   </div>
 </div>
 @endsection
 
 @push('style')
-<link rel="stylesheet" href="{{ asset('vendor/select2/dist/css/select2.min.css') }}" />
+<link href="{{ asset('vendor/datatables/dataTables.bootstrap4.min.css') }}" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.7/css/responsive.bootstrap4.min.css">
 @endpush
 
 @push('script')
-<script defer src="{{ asset('vendor/select2/dist/js/select2.min.js') }}"></script>
-<script>
-  $(document).ready(function() {
-    $('.select2').select2({
-      widht: '100%'
-    });
-  });
-</script>
+<!-- Page level plugins -->
+<script defer src="{{ asset('vendor/datatables/jquery.dataTables.min.js') }}"></script>
+<script defer src="{{ asset('vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
+<script defer src="https://cdn.datatables.net/responsive/2.2.7/js/dataTables.responsive.min.js"></script>
+<script defer src="https://cdn.datatables.net/responsive/2.2.7/js/responsive.bootstrap4.min.js"></script>
+
+<!-- Page level custom scripts -->
+{!! $dataTable->scripts() !!}
 @endpush

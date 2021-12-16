@@ -181,7 +181,7 @@
   });
 
   function loadPreview(input, id) {
-    console.log(input);
+    // console.log(input);
     id = id || '#preview_img';
     if (input.files && input.files[0]) {
       var reader = new FileReader();

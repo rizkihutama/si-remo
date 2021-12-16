@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Checkout;
 use Closure;
 use Illuminate\Http\Request;
 
@@ -16,8 +17,8 @@ class UserCheckout
      */
     public function handle(Request $request, Closure $next)
     {
-        dd($request->route()->parameters('checkout')['checkout']);
-        $userCheckout = $request->route()->parameters('checkout')['checkout']->users->user_id;
+        $checkout = Checkout::findOrFail($request->route()->parameters('checkout')['checkout']->checkout_id);
+        $userCheckout = $checkout->users->user_id;
         if ($userCheckout !== auth()->user()->user_id) return abort(404);
         return $next($request);
     }

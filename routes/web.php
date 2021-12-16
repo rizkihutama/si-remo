@@ -60,11 +60,14 @@ Route::middleware('auth')->group(function () {
 
     Route::middleware('userCheckout')->group(function () {
         Route::get('car-checkout/{checkout}', [CheckoutController::class, 'checkoutBooking'])->name('car-checkout');
-        Route::patch('car-checkout-update/{checkout}', [CheckoutController::class, 'checkoutBookingUpdate'])
+        Route::patch('car-checkout-update/{checkout}', [CheckoutController::class, 'checkoutUpdate'])
             ->name('car-checkout.update');
-        Route::get('my-checkout/{checkout}', [CheckoutController::class, 'myCheckout'])->name('my-checkout');
+        Route::get('car-checkout-detail/{checkout}', [CheckoutController::class, 'checkoutDetail'])->name('car-checkout.detail');
+
         Route::patch('upload-proof/{checkout}', [CheckoutController::class, 'uploadProof'])->name('upload-proof');
     });
+
+    Route::get('my-checkout', [CheckoutController::class, 'myCheckoutIndex'])->name('my-checkout.index');
 });
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
