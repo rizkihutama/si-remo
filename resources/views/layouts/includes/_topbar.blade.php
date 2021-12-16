@@ -1,13 +1,13 @@
 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
 
   @auth
-  @if(auth()->user()->role == App\Models\User::ROLE_ADMIN)
+  @if(auth()->user()->isAdmin())
   <!-- Sidebar Toggle (Topbar) -->
   <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
     <i class="fa fa-bars"></i>
   </button>
   @endif
-  @if(auth()->user()->role == App\Models\User::ROLE_USER)
+  @if(auth()->user()->isUser())
   <!-- Sidebar Toggle (Topbar) -->
   <a href="{{ route('home') }}" class="btn mr-3" style="font-weight: bold">SI-REMO</a>
   @endif
@@ -184,11 +184,13 @@
       </a>
       <!-- Dropdown - User Information -->
       <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+        @if (auth()->user()->isUser())
         <a class="dropdown-item" href="{{ route('my-checkout.index') }}">
           <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
           My Order
         </a>
         <div class="dropdown-divider"></div>
+        @endif
         <form action="{{ route('logout') }}" class="logout-form" method="POST">
           @csrf
           <button class="dropdown-item" onclick="return logout(event)">

@@ -101,7 +101,7 @@ class CheckoutController extends Controller
     public function myCheckoutIndex(Request $request)
     {
         if ($request->ajax()) {
-            $data = Checkout::all();
+            $data = Checkout::where('user_id', auth()->id())->get();
             $datatables = DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
@@ -182,5 +182,66 @@ class CheckoutController extends Controller
             return redirect()->back()->with('error', $e->getMessage() . ' : ' . $e->getLine());
         }
         return redirect()->route('my-checkout.index')->with('success', 'Upload Bukti Pembayaran Berhasil');
+    }
+
+    public function index(Request $request)
+    {
+        if ($request->ajax()) {
+            $data = Checkout::all();
+            $datatables = DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action', function ($row) {
+                    $showRoute = route('car-checkout.detail', ['checkout' => $row]);
+                    $editRoute = route('admin.cars.edit', ['car' => $row]);
+                    $btn = "<div class='d-flex'>
+                                <a href='{$showRoute}' class='btn btn-icon btn-info btn-sm mr-2' title='Detail'>
+                                    <i class='far fa-eye icon-nm'></i>
+                                </a>
+                                <a href='{$editRoute}' class='btn btn-icon btn-warning btn-sm mr-2' title='Edit'>
+                                    <i class='fas fa-edit icon-nm'></i>
+                                </a>
+                            </div>";
+
+                    return $btn;
+                })
+                ->editColumn('booking_code', function ($row) {
+                    return $row->bookings->code;
+                })
+                ->editColumn('payment_proof', function ($row) {
+                    return $row->payment_proof ? '<h5><span class="badge badge-success">Sudah Upload</span></h5>' : '<h5><span class="badge badge-danger">Belum Upload</span></h5>';
+                })
+                ->editColumn('status', function ($row) {
+                    return $row->getPaymentStatusBadgeLabelAttribute();
+                })
+                ->rawColumns(['payment_proof', 'status', 'action']);
+            return $datatables->make(true);
+        }
+
+        $dataTable = $this->htmlbuilder
+            ->parameters([
+                'paging' => true,
+                'searching' => true,
+                'info' => true,
+                'searchDelay' => 350,
+                // 'dom' => 'lBfrtip',
+                'buttons' => [
+                    'excelHtml5',
+                    'pdfHtml5',
+                    'print',
+                ],
+                'language' => [
+                    'emptyTable' => 'Tidak Ada Data',
+                    'zeroRecords' => 'Hasil Pencarian Tidak Ditemukan',
+                ],
+                'order' => [2, 'asc'],
+                'responsive' => true,
+            ])
+            ->addColumn(['data' => 'DT_RowIndex', 'name' => 'DT_RowIndex', 'title' => '#', 'orderable' => false, 'searchable' => false, 'width' => 30])
+            ->addColumn(['data' => 'booking_code', 'name' => 'booking_code', 'title' => 'Kode Booking'])
+            ->addColumn(['data' => 'status', 'name' => 'status', 'title' => 'Status'])
+            ->addColumn(['data' => 'payment_proof', 'name' => 'payment_proof', 'title' => 'Bukti Pembayaran'])
+            ->addColumn(['data' => 'action', 'name' => 'action', 'title' => 'Aksi', 'orderable' => false, 'searchable' => false, 'width' => 100, 'exportable' => false]);
+
+        return view('checkout.index', compact('dataTable'));
     }
 }
