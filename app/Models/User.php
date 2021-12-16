@@ -64,6 +64,11 @@ class User extends Authenticatable
         return $this->role == self::ROLE_ADMIN;
     }
 
+    public function isUser()
+    {
+        return $this->role == self::ROLE_USER;
+    }
+
     public function bookings()
     {
         return $this->hasMany(Booking::class, 'user_id', 'user_id');
