@@ -47,6 +47,9 @@
               @if (!empty($checkout->payment_proof))
               <img id="preview_img" src="{{ url($path) }}" class="img-fluid"
                 style="border: 1px solid #ccc; border-radius: 10px; margin-top: 5px" width="200" height="150">
+              @else
+              <img id="preview_img" class="img-fluid"
+                style="border: 1px solid #ccc; margin-top: 5px; border-radius: 10px;">
               @endif
             </div>
             <div class="form-group">
@@ -64,7 +67,7 @@
 @push('script')
 <script>
   function loadPreview(input, id) {
-    console.log(input);
+    // console.log(input);
     id = id || '#preview_img';
     if (input.files && input.files[0]) {
       var reader = new FileReader();

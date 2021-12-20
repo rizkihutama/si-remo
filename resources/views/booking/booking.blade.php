@@ -189,9 +189,8 @@
       text: "Harap periksa lagi data anda!",
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Ya, checkout!',
       cancelButtonText: 'Tidak, batalkan!',
-      reverseButtons: true
+      confirmButtonText: 'Ya, checkout!',
     }).then((result) => {
       if (result.isConfirmed) $('#checkout-form').submit();
     });

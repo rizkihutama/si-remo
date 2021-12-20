@@ -21,6 +21,11 @@ class CheckoutController extends Controller
         $this->htmlbuilder = $htmlbuilder;
     }
 
+    protected function getBookings($booking_id)
+    {
+        return Booking::where('booking_id', $booking_id)->first();
+    }
+
     private function validateBankRequest(Request $request)
     {
         return $request->validate([
@@ -105,11 +110,17 @@ class CheckoutController extends Controller
             $datatables = DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
-                    $showRoute = route('car-checkout.detail', ['checkout' => $row]);
-                    // $editRoute = route('admin.cars.edit', ['car' => $row]);
+                    if (empty($row->bank_id)) {
+                        $showRoute = route('car-checkout', ['checkout' => $row]);
+                    } else {
+                        $showRoute = route('car-checkout.detail', ['checkout' => $row]);
+                    }
                     $btn = "<div class='d-flex'>
                                 <a href='{$showRoute}' class='btn btn-icon btn-info btn-sm mr-2' title='Detail'>
                                     <i class='far fa-eye icon-nm'></i>
+                                </a>
+                                <a href='mailto:siremo@admin.com' class='btn btn-icon btn-primary btn-sm mr-2' title='Email to admin'>
+                                    <i class='fas fa-envelope'></i>
                                 </a>
                             </div>";
 
@@ -119,7 +130,7 @@ class CheckoutController extends Controller
                     return $row->bookings->code;
                 })
                 ->editColumn('payment_proof', function ($row) {
-                    return $row->payment_proof ? '<h5><span class="badge badge-success">Sudah Upload</span></h5>' : '<h5><span class="badge badge-danger">Belum Upload</span></h5>';
+                    return $row->getPaymentProof();
                 })
                 ->editColumn('status', function ($row) {
                     return $row->getPaymentStatusBadgeLabelAttribute();
@@ -159,6 +170,8 @@ class CheckoutController extends Controller
     public function uploadProof(Request $request, Checkout $checkout)
     {
         $this->validateUploadProofRequest($request, $checkout);
+        $bookings = $this->getBookings($checkout->bookings->booking_id);
+
 
         DB::beginTransaction();
         try {
@@ -170,6 +183,10 @@ class CheckoutController extends Controller
                 //* Get New File Name
                 $newFile = FileHelper::upload($request->file('payment_proof'), Checkout::getImgProofPath());
             }
+
+            $bookings->update([
+                'status' => Booking::STATUS_WAITING_CONFIRMATION,
+            ]);
 
             $checkout->update([
                 'payment_proof' => $newFile ?? $oldFile,
@@ -184,6 +201,20 @@ class CheckoutController extends Controller
         return redirect()->route('my-checkout.index')->with('success', 'Upload Bukti Pembayaran Berhasil');
     }
 
+    public function cancelCheckout(Checkout $checkout)
+    {
+        $bookings = $this->getBookings($checkout->bookings->booking_id);
+        $bookings->update([
+            'status' => Booking::STATUS_CANCELED,
+        ]);
+
+        $checkout->update([
+            'status' => Checkout::STATUS_CANCELED,
+        ]);
+
+        return redirect()->route('my-checkout.index')->with('success', 'Pesanan Dibatalkan');
+    }
+
     public function index(Request $request)
     {
         if ($request->ajax()) {
@@ -191,8 +222,8 @@ class CheckoutController extends Controller
             $datatables = DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
-                    $showRoute = route('car-checkout.detail', ['checkout' => $row]);
-                    $editRoute = route('admin.cars.edit', ['car' => $row]);
+                    $showRoute = route('admin.checkouts.show', ['checkout' => $row]);
+                    $editRoute = route('admin.checkouts.edit', ['checkout' => $row]);
                     $btn = "<div class='d-flex'>
                                 <a href='{$showRoute}' class='btn btn-icon btn-info btn-sm mr-2' title='Detail'>
                                     <i class='far fa-eye icon-nm'></i>
@@ -208,7 +239,7 @@ class CheckoutController extends Controller
                     return $row->bookings->code;
                 })
                 ->editColumn('payment_proof', function ($row) {
-                    return $row->payment_proof ? '<h5><span class="badge badge-success">Sudah Upload</span></h5>' : '<h5><span class="badge badge-danger">Belum Upload</span></h5>';
+                    return $row->getPaymentProof();
                 })
                 ->editColumn('status', function ($row) {
                     return $row->getPaymentStatusBadgeLabelAttribute();
@@ -242,6 +273,30 @@ class CheckoutController extends Controller
             ->addColumn(['data' => 'payment_proof', 'name' => 'payment_proof', 'title' => 'Bukti Pembayaran'])
             ->addColumn(['data' => 'action', 'name' => 'action', 'title' => 'Aksi', 'orderable' => false, 'searchable' => false, 'width' => 100, 'exportable' => false]);
 
-        return view('checkout.index', compact('dataTable'));
+        return view('admin.checkout.index', compact('dataTable'));
+    }
+
+    public function show(Checkout $checkout)
+    {
+        return view('admin.checkout.show', compact('checkout'));
+    }
+
+    public function edit(Checkout $checkout)
+    {
+        $status = Checkout::paymentStatusLabels();
+        return view('admin.checkout.edit', compact('checkout', 'status'));
+    }
+
+    public function update(Request $request, Checkout $checkout)
+    {
+        $request->validate([
+            'status' => 'required',
+        ]);
+
+        $checkout->update([
+            'status' => $request->status,
+        ]);
+
+        return redirect()->route('admin.checkouts.index')->with('success', 'Status Pembayaran Berhasil Diubah');
     }
 }
