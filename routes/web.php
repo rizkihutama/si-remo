@@ -47,6 +47,7 @@ Route::middleware('auth')->group(function () {
 
         Route::resource('drivers', DriverController::class)->names('admin.drivers');
         Route::resource('banks', BankController::class)->names('admin.banks');
+        Route::resource('checkouts', CheckoutController::class)->names('admin.checkouts');
     });
 
     Route::prefix('model')->group(function () {
@@ -64,6 +65,7 @@ Route::middleware('auth')->group(function () {
             ->name('car-checkout.update');
         Route::get('car-checkout-detail/{checkout}', [CheckoutController::class, 'checkoutDetail'])->name('car-checkout.detail');
 
+        Route::patch('cancel-checkout/{checkout}', [CheckoutController::class, 'cancelCheckout'])->name('cancel-checkout');
         Route::patch('upload-proof/{checkout}', [CheckoutController::class, 'uploadProof'])->name('upload-proof');
     });
 

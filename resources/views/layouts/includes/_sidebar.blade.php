@@ -61,6 +61,13 @@
       <span>Banks</span></a>
   </li>
 
+  <!-- Checkouts -->
+  <li class="nav-item {{ (request()->segment(1) == 'checkouts') ? 'active' : ''}}">
+    <a class="nav-link" href="{{ route('admin.checkouts.index') }}">
+      <i class="far fa-money-bill-alt"></i>
+      <span>Checkouts</span></a>
+  </li>
+
   <!-- Divider -->
   <hr class="sidebar-divider d-none d-md-block">
 

@@ -45,8 +45,8 @@ class Checkout extends BaseModel
     {
         return [
             self::STATUS_WAITING_PAYMENT => "Menunggu Pembayaran",
-            self::STATUS_PAID => "Lunas",
             self::STATUS_WAITING_CONFIRMATION => "Menunggu Konfirmasi",
+            self::STATUS_PAID => "Lunas",
             self::STATUS_CANCELED => "Dibatalkan",
         ];
     }
@@ -69,6 +69,24 @@ class Checkout extends BaseModel
     public function getPaymentStatusBadgeLabelAttribute()
     {
         return $this->paymentStatusBadgeLabels()[$this->status];
+    }
+
+    public function withDriverStatusBadgeLabels()
+    {
+        return [
+            self::WITH_DRIVER_TRUE => '<h5><span class="badge badge-success">Iya</span></h5>',
+            self::WITH_DRIVER_FALSE => '<h5><span class="badge badge-danger">Tidak</span></h5>',
+        ];
+    }
+
+    public function getWithDriverStatusBadgeLabelAttribute()
+    {
+        return $this->withDriverStatusBadgeLabels()[$this->with_driver];
+    }
+
+    public function getPaymentProof()
+    {
+        return $this->payment_proof ? '<h5><span class="badge badge-success">Sudah Upload</span></h5>' : '<h5><span class="badge badge-danger">Belum Upload</span></h5>';
     }
 
     public static function getImgProofPath()

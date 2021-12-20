@@ -8,10 +8,13 @@
   </button>
   @endif
   @if(auth()->user()->isUser())
-  <!-- Sidebar Toggle (Topbar) -->
   <a href="{{ route('home') }}" class="btn mr-3" style="font-weight: bold">SI-REMO</a>
   @endif
   @endauth
+
+  @guest
+  <a href="{{ route('home') }}" class="btn mr-3" style="font-weight: bold">SI-REMO</a>
+  @endguest
 
   <!-- Topbar Search -->
   {{-- <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
