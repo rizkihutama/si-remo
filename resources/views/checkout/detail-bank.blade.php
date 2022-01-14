@@ -1,5 +1,5 @@
 @extends('layouts.app-user')
-@section('pageTitle', 'Checkout Detail')
+@section('pageTitle', 'Upload Bukti')
 @section('content')
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
@@ -51,6 +51,9 @@
               <img id="preview_img" class="img-fluid"
                 style="border: 1px solid #ccc; margin-top: 5px; border-radius: 10px;">
               @endif
+              <br><br>
+              <small>*Jika anda sudah mengupload bukti atau admin sudah mengkonfirmasi pesanan, anda tidak perlu upload
+                lagi.</small>
             </div>
             <div class="form-group">
               {!! Form::submit('Upload', ['class' => 'btn btn-primary']) !!}

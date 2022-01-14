@@ -65,7 +65,19 @@
   <li class="nav-item {{ (request()->segment(1) == 'checkouts') ? 'active' : ''}}">
     <a class="nav-link" href="{{ route('admin.checkouts.index') }}">
       <i class="far fa-money-bill-alt"></i>
-      <span>Checkouts</span></a>
+      Checkouts
+      @if (App\Models\Checkout::waitingConfirmation()->count() > 0)
+      <span class="badge badge-danger ml-2">•</span>
+      @endif
+    </a>
+  </li>
+
+  <!-- Car in and out -->
+  <li class="nav-item {{ (request()->segment(1) == 'car-in-and-out') ? 'active' : ''}}">
+    <a class="nav-link" href="{{ route('admin.car-in-and-out.index') }}">
+      <i class="fas fa-folder"></i>
+      <span>Car in and out</span>
+    </a>
   </li>
 
   <!-- Divider -->
@@ -77,3 +89,17 @@
   </div>
 
 </ul>
+
+@if (App\Models\Checkout::waitingConfirmation()->count() > 0 && request()->segment(1) !== 'checkouts')
+@push('script')
+<script>
+  $(document).ready(function() {
+      swalWithBootstrapButtons.fire({
+      title: 'Ada pesanan masuk!',
+      text: 'Silahkan cek pesanan masuk',
+      icon: 'info',
+    })
+  });
+</script>
+@endpush
+@endif

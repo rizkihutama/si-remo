@@ -100,9 +100,9 @@ class BookingController extends Controller
             ]);
 
             DB::commit();
-        } catch (\Throwable $e) {
+        } catch (\Exception $e) {
             DB::rollBack();
-            throw $e;
+            return redirect()->back()->with('error', 'Tidak ada pengemudi yang tersedia');
         }
 
         return redirect()->route('car-checkout', $checkout->checkout_id);

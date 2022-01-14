@@ -4,6 +4,7 @@ use App\Http\Controllers\BankController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\CarBrandController;
 use App\Http\Controllers\CarController;
+use App\Http\Controllers\CarInAndOutController;
 use App\Http\Controllers\CarModelController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\DashboardController;
@@ -48,6 +49,11 @@ Route::middleware('auth')->group(function () {
         Route::resource('drivers', DriverController::class)->names('admin.drivers');
         Route::resource('banks', BankController::class)->names('admin.banks');
         Route::resource('checkouts', CheckoutController::class)->names('admin.checkouts');
+
+        Route::get('car-in-and-out', [CarInAndOutController::class, 'index'])->name('admin.car-in-and-out.index');
+        Route::get('car-in-and-out/{checkout}', [CarInAndOutController::class, 'show'])->name('admin.car-in-and-out.show');
+        Route::get('car-in-and-out/{checkout}/edit', [CarInAndOutController::class, 'edit'])->name('admin.car-in-and-out.edit');
+        Route::patch('car-in-and-out/{checkout}', [CarInAndOutController::class, 'update'])->name('admin.car-in-and-out.update');
     });
 
     Route::prefix('model')->group(function () {
@@ -63,7 +69,9 @@ Route::middleware('auth')->group(function () {
         Route::get('car-checkout/{checkout}', [CheckoutController::class, 'checkoutBooking'])->name('car-checkout');
         Route::patch('car-checkout-update/{checkout}', [CheckoutController::class, 'checkoutUpdate'])
             ->name('car-checkout.update');
-        Route::get('car-checkout-detail/{checkout}', [CheckoutController::class, 'checkoutDetail'])->name('car-checkout.detail');
+        Route::get('car-checkout-upload-proof/{checkout}', [CheckoutController::class, 'uploadProofIndex'])
+            ->name('car-checkout.upload-proof');
+        Route::get('invoice/{checkout}', [CheckoutController::class, 'invoice'])->name('invoice');
 
         Route::patch('cancel-checkout/{checkout}', [CheckoutController::class, 'cancelCheckout'])->name('cancel-checkout');
         Route::patch('upload-proof/{checkout}', [CheckoutController::class, 'uploadProof'])->name('upload-proof');

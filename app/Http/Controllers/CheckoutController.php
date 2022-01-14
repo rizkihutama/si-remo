@@ -76,7 +76,7 @@ class CheckoutController extends Controller
         return redirect()->route('car-checkout.detail', $checkout->checkout_id);
     }
 
-    public function checkoutDetail(Checkout $checkout)
+    public function uploadProofIndex(Checkout $checkout)
     {
         $banks = Bank::pluck('name', 'bank_id');
         $booking_code = $checkout->bookings->code;
@@ -113,16 +113,28 @@ class CheckoutController extends Controller
                     if (empty($row->bank_id)) {
                         $showRoute = route('car-checkout', ['checkout' => $row]);
                     } else {
-                        $showRoute = route('car-checkout.detail', ['checkout' => $row]);
-                    }
-                    $btn = "<div class='d-flex'>
-                                <a href='{$showRoute}' class='btn btn-icon btn-info btn-sm mr-2' title='Detail'>
-                                    <i class='far fa-eye icon-nm'></i>
+                        if ($row->status == Checkout::STATUS_PAID) {
+                            $invoice = route('invoice', ['checkout' => $row]);
+                            $btn = "<div class='d-flex'>
+                            <a href='{$invoice}' class='btn btn-icon btn-info btn-sm mr-2' title='Invoice'>
+                                <i class='fas fa-file-invoice-dollar'></i>
+                            </a>
+                            <a href='mailto:siremo@admin.com' class='btn btn-icon btn-primary btn-sm mr-2' title='Email to admin'>
+                                <i class='fas fa-envelope'></i>
+                            </a>
+                        </div>";
+                        } else {
+                            $showRoute = route('car-checkout.upload-proof', ['checkout' => $row]);
+                            $btn = "<div class='d-flex'>
+                                <a href='{$showRoute}' class='btn btn-icon btn-info btn-sm mr-2' title='Upload Bukti'>
+                                    <i class='fas fa-file-upload'></i>
                                 </a>
                                 <a href='mailto:siremo@admin.com' class='btn btn-icon btn-primary btn-sm mr-2' title='Email to admin'>
                                     <i class='fas fa-envelope'></i>
                                 </a>
                             </div>";
+                        }
+                    }
 
                     return $btn;
                 })
@@ -198,7 +210,28 @@ class CheckoutController extends Controller
             DB::rollback();
             return redirect()->back()->with('error', $e->getMessage() . ' : ' . $e->getLine());
         }
-        return redirect()->route('my-checkout.index')->with('success', 'Upload Bukti Pembayaran Berhasil');
+        return redirect()->route('my-checkout.index')->with('success', 'Upload Bukti Pembayaran Berhasil, Silahkan Tunggu Konfirmasi Admin');
+    }
+
+    public function invoice(Checkout $checkout)
+    {
+        $booking_code = $checkout->bookings->code;
+        $start_date = Checkout::formatDateFE($checkout->bookings->start_date);
+        $end_date = Checkout::formatDateFE($checkout->bookings->end_date);
+        $days = $checkout->bookings->days;
+        $tax = Booking::TAX_RATE;
+        $sub_total = Checkout::rupiah($checkout->bookings->sub_total);
+        $total = Checkout::rupiah($checkout->bookings->total);
+        return view('checkout.invoice', compact(
+            'checkout',
+            'booking_code',
+            'start_date',
+            'end_date',
+            'days',
+            'tax',
+            'sub_total',
+            'total'
+        ));
     }
 
     public function cancelCheckout(Checkout $checkout)
@@ -269,7 +302,7 @@ class CheckoutController extends Controller
             ])
             ->addColumn(['data' => 'DT_RowIndex', 'name' => 'DT_RowIndex', 'title' => '#', 'orderable' => false, 'searchable' => false, 'width' => 30])
             ->addColumn(['data' => 'booking_code', 'name' => 'booking_code', 'title' => 'Kode Booking'])
-            ->addColumn(['data' => 'status', 'name' => 'status', 'title' => 'Status'])
+            ->addColumn(['data' => 'status', 'name' => 'status', 'title' => 'Status Pembayaran'])
             ->addColumn(['data' => 'payment_proof', 'name' => 'payment_proof', 'title' => 'Bukti Pembayaran'])
             ->addColumn(['data' => 'action', 'name' => 'action', 'title' => 'Aksi', 'orderable' => false, 'searchable' => false, 'width' => 100, 'exportable' => false]);
 

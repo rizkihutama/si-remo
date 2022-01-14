@@ -18,6 +18,10 @@ class Checkout extends BaseModel
     const STATUS_WAITING_CONFIRMATION = 2;
     const STATUS_CANCELED = 3;
 
+    const RENT_STATUS_NOT_RENTED = 0;
+    const RENT_STATUS_RENTED = 1;
+    const RENT_STATUS_RETURNED = 2;
+
     protected $table = "checkouts";
     protected $primaryKey = "checkout_id";
     protected $guarded = ["checkout_id"];
@@ -34,6 +38,8 @@ class Checkout extends BaseModel
         "payment_proof",
         "sub_total",
         "total",
+        "rent_status",
+        "fine",
     ];
 
     public static function formatDateFE($date)
@@ -41,7 +47,7 @@ class Checkout extends BaseModel
         return now()->parse($date)->locale('id')->isoFormat('ddd, D MMM Y');
     }
 
-    public function paymentStatusLabels()
+    public static function paymentStatusLabels()
     {
         return [
             self::STATUS_WAITING_PAYMENT => "Menunggu Pembayaran",
@@ -71,6 +77,34 @@ class Checkout extends BaseModel
         return $this->paymentStatusBadgeLabels()[$this->status];
     }
 
+    public static function rentStatusLabels()
+    {
+        return [
+            self::RENT_STATUS_NOT_RENTED => "Belum Dipinjam",
+            self::RENT_STATUS_RENTED => "Sedang Dipinjam",
+            self::RENT_STATUS_RETURNED => "Sudah Dikembalikan",
+        ];
+    }
+
+    public function getRentStatusLabelAttribute()
+    {
+        return $this->rentStatusLabels()[$this->rent_status];
+    }
+
+    public function rentStatusBadgeLabels()
+    {
+        return [
+            self::RENT_STATUS_NOT_RENTED => '<h5><span class="badge badge-secondary">Belum Dipinjam</span></h5>',
+            self::RENT_STATUS_RENTED => '<h5><span class="badge badge-primary">Sedang Dipinjam</span></h5>',
+            self::RENT_STATUS_RETURNED => '<h5><span class="badge badge-success">Sudah Dikembalikan</span></h5>',
+        ];
+    }
+
+    public function getRentStatusBadgeLabelAttribute()
+    {
+        return $this->rentStatusBadgeLabels()[$this->rent_status];
+    }
+
     public function withDriverStatusBadgeLabels()
     {
         return [
@@ -86,7 +120,19 @@ class Checkout extends BaseModel
 
     public function getPaymentProof()
     {
-        return $this->payment_proof ? '<h5><span class="badge badge-success">Sudah Upload</span></h5>' : '<h5><span class="badge badge-danger">Belum Upload</span></h5>';
+        return $this->payment_proof
+            ? '<h5><span class="badge badge-success">Sudah Upload</span></h5>'
+            : '<h5><span class="badge badge-danger">Belum Upload</span></h5>';
+    }
+
+    public function scopeWaitingConfirmation($query)
+    {
+        return $query->where('status', self::STATUS_WAITING_CONFIRMATION);
+    }
+
+    public function getFine()
+    {
+        return self::rupiah($this->fine);
     }
 
     public static function getImgProofPath()

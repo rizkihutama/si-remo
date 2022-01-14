@@ -14,7 +14,7 @@
           <h5>Kapasitas Penumpang</h5>
           <div class="row row-cols-3 my-3">
             <div class="col-lg-3 col-md-4 col">
-              <button class="btn btn-seats btn-outline-primary all-seats btn-sm" data-seats="all-seats" id="all-seats">
+              <button class="btn btn-seats btn-outline-primary all-seats" data-seats="all-seats" id="all-seats">
                 Semua
               </button>
             </div>
@@ -94,14 +94,11 @@
 
 @push('style')
 <style>
-  /* .cars-card {
-    cursor: pointer;
-  } */
-
   .cars-image {
     height: 100%;
     width: 100%;
     object-fit: contain;
+    padding: 30px;
   }
 
   .btn-outline-primary:focus {

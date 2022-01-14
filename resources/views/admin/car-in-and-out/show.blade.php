@@ -1,14 +1,14 @@
 @extends('layouts.app-admin')
-@section('pageTitle', 'Detail Checkout')
+@section('pageTitle', 'Detail Rent')
 @section('content')
 <!-- Page Heading -->
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-  <h1 class="h3 mb-0 text-gray-800">Detail Checkout</h1>
+  <h1 class="h3 mb-0 text-gray-800">Detail Rent</h1>
 </div>
 
 <div class="card shadow mb-4">
   <div class="card-header py-3">
-    <h6 class="m-0 font-weight-bold text-primary">Detail Checkout</h6>
+    <h6 class="m-0 font-weight-bold text-primary">Detail Rent</h6>
   </div>
   <div class="card-body">
     <div class="table-responsive">
@@ -88,6 +88,14 @@
           <td>{!! $checkout->getPaymentStatusBadgeLabelAttribute() !!}</td>
         </tr>
         <tr>
+          <th>Status Sewa</th>
+          <td>{!! $checkout->getRentStatusBadgeLabelAttribute() !!}</td>
+        </tr>
+        <tr>
+          <th>Denda</th>
+          <td>{!! $checkout->getFine() ?? '-' !!}</td>
+        </tr>
+        <tr>
           <th>Tgl Dibuat</th>
           <td>{{ with(new Carbon\Carbon($checkout->created_at))->format('d M Y H:i:s') }}</td>
         </tr>
@@ -106,8 +114,8 @@
       </table>
     </div>
 
-    <a href="{{ route('admin.checkouts.index') }}" class="btn btn-secondary mr-3">Back</a>
-    <a href="{{ route('admin.checkouts.edit', $checkout) }}" class="btn btn-primary">Edit</a>
+    <a href="{{ route('admin.car-in-and-out.index') }}" class="btn btn-secondary mr-3">Back</a>
+    <a href="{{ route('admin.car-in-and-out.edit', $checkout) }}" class="btn btn-primary">Edit</a>
   </div>
 </div>
 @endsection
