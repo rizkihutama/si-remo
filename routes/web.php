@@ -34,8 +34,13 @@ Auth::routes();
 Route::middleware('auth')->group(function () {
 
     Route::middleware('isAdmin')->group(function () {
-        Route::get('/dashboard', [DashboardController::class, 'index'])
-            ->name('admin.dashboard');
+        Route::get('dashboard', [DashboardController::class, 'index'])
+            ->name('admin.dashboard.index');
+        Route::get('dashboard/{checkout}', [DashboardController::class, 'show'])
+            ->name('admin.dashboard.show');
+        Route::get('dashboard/{checkout}/edit', [DashboardController::class, 'edit'])->name('admin.dashboard.edit');
+        Route::patch('dashboard/{checkout}', [DashboardController::class, 'update'])->name('admin.dashboard.update');
+        Route::get('checkouts/export/', [DashboardController::class, 'export'])->name('admin.dashboard.export');
 
         Route::prefix('cars')->group(function () {
             Route::resource('/car-brands', CarBrandController::class)
@@ -48,7 +53,6 @@ Route::middleware('auth')->group(function () {
 
         Route::resource('drivers', DriverController::class)->names('admin.drivers');
         Route::resource('banks', BankController::class)->names('admin.banks');
-        Route::resource('checkouts', CheckoutController::class)->names('admin.checkouts');
 
         Route::get('car-in-and-out', [CarInAndOutController::class, 'index'])->name('admin.car-in-and-out.index');
         Route::get('car-in-and-out/{checkout}', [CarInAndOutController::class, 'show'])->name('admin.car-in-and-out.show');

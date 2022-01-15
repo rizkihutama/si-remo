@@ -11,9 +11,9 @@
     <h6 class="m-0 font-weight-bold text-primary">Edit Checkout</h6>
   </div>
   <div class="card-body">
-    {!! Form::model($checkout, ['route' => ['admin.checkouts.update', $checkout], 'method' => 'PATCH', 'files' =>
+    {!! Form::model($checkout, ['route' => ['admin.dashboard.update', $checkout], 'method' => 'PATCH', 'files' =>
     false]) !!}
-    @include('admin.checkout._form', ['isNewRecord' => false])
+    @include('admin.dashboard._form', ['isNewRecord' => false])
     {!! Form::close() !!}
   </div>
 </div>

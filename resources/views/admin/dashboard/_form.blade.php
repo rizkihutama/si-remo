@@ -11,7 +11,7 @@
 </div>
 <div class="row">
   <div class="col-lg-6 col-md-6">
-    <a href="{{ route('admin.checkouts.index') }}" class="btn btn-submit btn btn-secondary mr-3">Back</a>
+    <a href="{{ route('admin.dashboard.index') }}" class="btn btn-submit btn btn-secondary mr-3">Back</a>
     <button type="submit" class="submit btn btn-primary">Save</button>
   </div>
 </div>

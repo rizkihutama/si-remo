@@ -13,7 +13,7 @@
 
   <!-- Nav Item - Dashboard -->
   <li class="nav-item {{ (request()->segment(1) == 'dashboard') ? 'active' : '' }}">
-    <a class="nav-link" href="{{ route('admin.dashboard') }}">
+    <a class="nav-link" href="{{ route('admin.dashboard.index') }}">
       <i class="fas fa-fw fa-tachometer-alt"></i>
       <span>Dashboard</span></a>
   </li>
@@ -62,15 +62,15 @@
   </li>
 
   <!-- Checkouts -->
-  <li class="nav-item {{ (request()->segment(1) == 'checkouts') ? 'active' : ''}}">
-    <a class="nav-link" href="{{ route('admin.checkouts.index') }}">
-      <i class="far fa-money-bill-alt"></i>
-      Checkouts
-      @if (App\Models\Checkout::waitingConfirmation()->count() > 0)
-      <span class="badge badge-danger ml-2">•</span>
-      @endif
-    </a>
-  </li>
+  {{-- <li class="nav-item {{ (request()->segment(1) == 'checkouts') ? 'active' : ''}}">
+  <a class="nav-link" href="{{ route('admin.checkouts.index') }}">
+    <i class="far fa-money-bill-alt"></i>
+    Checkouts
+    @if (App\Models\Checkout::waitingConfirmation()->count() > 0)
+    <span class="badge badge-danger ml-2">•</span>
+    @endif
+  </a>
+  </li> --}}
 
   <!-- Car in and out -->
   <li class="nav-item {{ (request()->segment(1) == 'car-in-and-out') ? 'active' : ''}}">

@@ -106,8 +106,8 @@
       </table>
     </div>
 
-    <a href="{{ route('admin.checkouts.index') }}" class="btn btn-secondary mr-3">Back</a>
-    <a href="{{ route('admin.checkouts.edit', $checkout) }}" class="btn btn-primary">Edit</a>
+    <a href="{{ route('admin.dashboard.index') }}" class="btn btn-secondary mr-3">Back</a>
+    <a href="{{ route('admin.dashboard.edit', $checkout) }}" class="btn btn-primary">Edit</a>
   </div>
 </div>
 @endsection
