@@ -73,7 +73,7 @@ class CheckoutController extends Controller
     {
         $validatedBank = $this->validateBankRequest($request);
         $checkout->update($validatedBank);
-        return redirect()->route('car-checkout.detail', $checkout->checkout_id);
+        return redirect()->route('car-checkout.upload-proof', $checkout->checkout_id);
     }
 
     public function uploadProofIndex(Checkout $checkout)

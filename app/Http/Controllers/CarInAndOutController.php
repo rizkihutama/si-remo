@@ -115,13 +115,6 @@ class CarInAndOutController extends Controller
         return view('admin.car-in-and-out.edit', compact('start_date', 'end_date', 'checkout', 'rent_status'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, Checkout $checkout)
     {
         $this->validateRequest($request);

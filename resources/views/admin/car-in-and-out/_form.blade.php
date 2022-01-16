@@ -21,7 +21,7 @@
       <div class="form-group">
         {!! Form::label('start_date', 'Start Date') !!}
         {!! Form::text('start_date', $start_date, [
-        'class' => $errors->has('start_date') ? 'form-control is-invalid datepicker' : 'form-control datepicker',
+        'class' => $errors->has('start_date') ? 'form-control is-invalid start_date' : 'form-control start_date',
         'required' => 'required',
         ]) !!}
       </div>
@@ -29,7 +29,7 @@
       <div class="form-group">
         {!! Form::label('end_date', 'End Date') !!}
         {!! Form::text('end_date', $end_date, [
-        'class' => $errors->has('end_date') ? 'form-control is-invalid datepicker' : 'form-control datepicker',
+        'class' => $errors->has('end_date') ? 'form-control is-invalid end_date' : 'form-control end_date',
         'required' => 'required',
         ]) !!}
       </div>
@@ -61,9 +61,16 @@
       theme: 'bootstrap4',
     });
   
-    $('.datepicker').datepicker({
+    $('.start_date').datepicker({
       format: 'dd/mm/yyyy',
       language: 'id',
+      startDate: new Date(),
+    });
+
+    $('.end_date').datepicker({
+      format: 'dd/mm/yyyy',
+      language: 'id',
+      startDate: new Date(),
     });
   });
 </script>
