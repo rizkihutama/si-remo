@@ -6,6 +6,11 @@
       'class' => $errors->has('rent_status') ? 'form-control is-invalid select2' : 'form-control select2',
       'required' => 'required',
       ]) !!}
+      @error('rent_status')
+      <div class="text-danger">
+        <strong>{{ $message }}</strong>
+      </div>
+      @enderror
     </div>
 
     <div class="form-group">
@@ -13,6 +18,11 @@
       {!! Form::number('fine', null, [
       'class' => $errors->has('fine') ? 'form-control is-invalid' : 'form-control',
       ]) !!}
+      @error('fine')
+      <div class="text-danger">
+        <strong>{{ $message }}</strong>
+      </div>
+      @enderror
     </div>
   </div>
 
@@ -24,6 +34,11 @@
         'class' => $errors->has('start_date') ? 'form-control is-invalid start_date' : 'form-control start_date',
         'required' => 'required',
         ]) !!}
+        @error('start_date')
+        <div class="text-danger">
+          <strong>{{ $message }}</strong>
+        </div>
+        @enderror
       </div>
 
       <div class="form-group">
@@ -32,6 +47,11 @@
         'class' => $errors->has('end_date') ? 'form-control is-invalid end_date' : 'form-control end_date',
         'required' => 'required',
         ]) !!}
+        @error('end_date')
+        <div class="text-danger">
+          <strong>{{ $message }}</strong>
+        </div>
+        @enderror
       </div>
     </div>
   </div>

@@ -127,8 +127,10 @@ class CarInAndOutController extends Controller
             ]);
 
             $checkout->bookings->update([
-                'start_date' => $request->start_date,
-                'end_date' => $request->end_date,
+                'start_date' => Checkout::formatDate($request->start_date),
+                'end_date' => Checkout::formatDate($request->end_date),
+                // 'start_date' => $request->start_date,
+                // 'end_date' => $request->end_date,
             ]);
 
             DB::commit();
