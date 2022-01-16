@@ -15,7 +15,11 @@
   <li class="nav-item {{ (request()->segment(1) == 'dashboard') ? 'active' : '' }}">
     <a class="nav-link" href="{{ route('admin.dashboard.index') }}">
       <i class="fas fa-fw fa-tachometer-alt"></i>
-      <span>Dashboard</span></a>
+      <span>Dashboard</span>
+      @if (App\Models\Checkout::waitingConfirmation()->count() > 0)
+      <span class="badge badge-danger ml-2">•</span>
+      @endif
+    </a>
   </li>
 
   <!-- Divider -->
@@ -90,7 +94,7 @@
 
 </ul>
 
-@if (App\Models\Checkout::waitingConfirmation()->count() > 0 && request()->segment(1) !== 'checkouts')
+@if (App\Models\Checkout::waitingConfirmation()->count() > 0 && request()->segment(1) !== 'dashboard')
 @push('script')
 <script>
   $(document).ready(function() {

@@ -100,7 +100,7 @@ class DashboardController extends Controller
             'status' => $request->status,
         ]);
 
-        return redirect()->route('admin.dasboard.index')->with('success', 'Status Pembayaran Berhasil Diubah');
+        return redirect()->route('admin.dashboard.index')->with('success', 'Status Pembayaran Berhasil Diubah');
     }
 
     public function export()
