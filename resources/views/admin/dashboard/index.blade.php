@@ -1,9 +1,9 @@
 @extends('layouts.app-admin')
-@section('pageTitle', 'Checkouts')
+@section('pageTitle', 'Dashboard')
 @section('content')
 <!-- Page Heading -->
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-  <h1 class="h3 mb-0 text-gray-800">Checkouts</h1>
+  <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
 </div>
 
 <!-- Content Row -->
@@ -11,7 +11,7 @@
   <div class="card-header py-3">
     <ul class="nav nav-pills card-header-pills justify-content-between">
       <li class="nav-item">
-        <h6 class="m-0 font-weight-bold text-primary nav-link">Checkouts</h6>
+        <h6 class="m-0 font-weight-bold text-primary nav-link">Dashboard</h6>
       </li>
       <li class="nav-item">
         <a href="{{ route('admin.dashboard.export') }}" class="btn btn-sm btn-primary nav-link">
