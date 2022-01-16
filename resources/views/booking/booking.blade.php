@@ -106,7 +106,6 @@
 <style>
   .card-detail-style {
     position: fixed;
-    left: 77px;
     top: 0;
     width: 24rem;
   }
