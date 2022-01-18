@@ -61,9 +61,9 @@
             <button type="submit" class="btn btn-primary btn-user btn-block">Register Account</button>
         </form>
         <hr>
-        <div class="text-center">
+        {{-- <div class="text-center">
             <a class="small" href="#">Forgot Password?</a>
-        </div>
+        </div> --}}
         <div class="text-center">
             <a class="small" href="{{ route('login') }}">Already have an account? Login!</a>
         </div>
