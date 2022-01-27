@@ -11,7 +11,8 @@
     <h6 class="m-0 font-weight-bold text-primary">Edit Rent</h6>
   </div>
   <div class="card-body">
-    {!! Form::model($checkout, ['route' => ['admin.car-in-and-out.update', $checkout], 'method' => 'PATCH', 'files' =>
+    {!! Form::model($carInAndOut, ['route' => ['admin.car-in-and-out.update', $carInAndOut], 'method' => 'PATCH',
+    'files' =>
     false]) !!}
     @include('admin.car-in-and-out._form', ['isNewRecord' => false])
     {!! Form::close() !!}

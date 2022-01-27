@@ -54,10 +54,7 @@ Route::middleware('auth')->group(function () {
         Route::resource('drivers', DriverController::class)->names('admin.drivers');
         Route::resource('banks', BankController::class)->names('admin.banks');
 
-        Route::get('car-in-and-out', [CarInAndOutController::class, 'index'])->name('admin.car-in-and-out.index');
-        Route::get('car-in-and-out/{checkout}', [CarInAndOutController::class, 'show'])->name('admin.car-in-and-out.show');
-        Route::get('car-in-and-out/{checkout}/edit', [CarInAndOutController::class, 'edit'])->name('admin.car-in-and-out.edit');
-        Route::patch('car-in-and-out/{checkout}', [CarInAndOutController::class, 'update'])->name('admin.car-in-and-out.update');
+        Route::resource('car-in-and-out', CarInAndOutController::class)->names('admin.car-in-and-out');
     });
 
     Route::prefix('model')->group(function () {

@@ -15,33 +15,34 @@
       <table class="table table-bordered table-striped">
         <tr>
           <th>Kode Booking</th>
-          <td>{{ $checkout->code }}</td>
+          <td>{{ $carInAndOut->code }}</td>
         </tr>
         <tr>
           <th>Mobil</th>
-          <td>{{ $checkout->cars->name }}</td>
+          <td>{{ $carInAndOut->cars->name }}</td>
         </tr>
         <tr>
           <th></th>
           <td>
-            <img src="{{ url(App\Models\Car::getImgUrl($checkout->cars->image)) }}" class="img-fluid"
+            <img src="{{ url(App\Models\Car::getImgUrl($carInAndOut->cars->image)) }}" class="img-fluid"
               style="border: 1px solid #ccc; padding: 5px; border-radius: 10px;" width="250" height="250">
           </td>
         </tr>
         <tr>
           <th>Bank Transfer</th>
-          <td>{!! $checkout->banks->name !!}</td>
+          <td>{!! $carInAndOut->checkouts->banks->name !!}</td>
         </tr>
         <tr>
           <th>Dengan Pengemudi</th>
-          <td>{!! $checkout->getWithDriverStatusBadgeLabelAttribute() !!}</td>
+          <td>{!! $carInAndOut->checkouts->getWithDriverStatusBadgeLabelAttribute() !!}</td>
         </tr>
         <tr>
           <th>Bukti Transfer</th>
           <td>
-            @if ($checkout->payment_proof)
-            <img src="{{ url(App\Models\Checkout::getImgProofUrl($checkout->payment_proof)) }}" class="img-fluid"
-              style="border: 1px solid #ccc; padding: 5px; border-radius: 10px;" width="250" height="250">
+            @if ($carInAndOut->checkouts->payment_proof)
+            <img src="{{ url(App\Models\Checkout::getImgProofUrl($carInAndOut->checkouts->payment_proof)) }}"
+              class="img-fluid" style="border: 1px solid #ccc; padding: 5px; border-radius: 10px;" width="250"
+              height="250">
             @else
             <h5><span class="badge badge-danger">Belum ada bukti transfer</span></h5>
             @endif
@@ -49,73 +50,73 @@
         </tr>
         <tr>
           <th>Tgl Mulai</th>
-          <td>{{ App\Models\Checkout::formatDateFE($checkout->bookings->start_date) }}</td>
+          <td>{{ App\Models\CarInAndOut::formatDateFE($carInAndOut->car_in) ?? '-' }}</td>
         </tr>
         <tr>
           <th>Tgl Selesai</th>
-          <td>{{ App\Models\Checkout::formatDateFE($checkout->bookings->end_date) }}</td>
+          <td>{{ App\Models\CarInAndOut::formatDateFE($carInAndOut->car_out) ?? '-' }}</td>
         </tr>
         <tr>
           <th>Lama Sewa</th>
-          <td>{{ $checkout->bookings->days }} Hari</td>
+          <td>{{ $carInAndOut->bookings->days }} Hari</td>
         </tr>
         <tr>
           <th>Lokasi Jemput</th>
-          <td>{{ $checkout->bookings->pickup_location }}</td>
+          <td>{{ $carInAndOut->bookings->pickup_location }}</td>
         </tr>
         <tr>
           <th>Lokasi Antar</th>
-          <td>{{ $checkout->bookings->dropoff_location }}</td>
+          <td>{{ $carInAndOut->bookings->dropoff_location }}</td>
         </tr>
         <tr>
           <th>Waktu Jemput</th>
-          <td>{{ $checkout->bookings->pickup_time }}</td>
+          <td>{{ $carInAndOut->bookings->pickup_time }}</td>
         </tr>
         <tr>
           <th>Waktu Antar</th>
-          <td>{{ $checkout->bookings->dropoff_time }}</td>
+          <td>{{ $carInAndOut->bookings->dropoff_time }}</td>
         </tr>
         <tr>
           <th>Subtotal</th>
-          <td>{{ App\Models\Checkout::rupiah($checkout->sub_total)  }}</td>
+          <td>{{ App\Models\Checkout::rupiah($carInAndOut->checkouts->sub_total) }}</td>
         </tr>
         <tr>
           <th>Total</th>
-          <td>{{ App\Models\Checkout::rupiah($checkout->total)  }}</td>
+          <td>{{ App\Models\Checkout::rupiah($carInAndOut->checkouts->total) }}</td>
         </tr>
         <tr>
-          <th>Status Pembayaran</th>
-          <td>{!! $checkout->getPaymentStatusBadgeLabelAttribute() !!}</td>
+          <th>Status Pembayaran Denda</th>
+          <td>{!! $carInAndOut->getFineStatusBadgeLabelAttribute() !!}</td>
         </tr>
         <tr>
           <th>Status Sewa</th>
-          <td>{!! $checkout->getRentStatusBadgeLabelAttribute() !!}</td>
+          <td>{!! $carInAndOut->getRentStatusBadgeLabelAttribute() !!}</td>
         </tr>
         <tr>
           <th>Denda</th>
-          <td>{!! $checkout->getFine() ?? '-' !!}</td>
+          <td>{!! $carInAndOut->getFine() ?? '-' !!}</td>
         </tr>
         <tr>
           <th>Tgl Dibuat</th>
-          <td>{{ with(new Carbon\Carbon($checkout->created_at))->format('d M Y H:i:s') }}</td>
+          <td>{{ with(new Carbon\Carbon($carInAndOut->created_at))->format('d M Y H:i:s') }}</td>
         </tr>
         <tr>
           <th>Tgl Diedit</th>
-          <td>{{ with(new Carbon\Carbon($checkout->updated_at))->format('d M Y H:i:s') }}</td>
+          <td>{{ with(new Carbon\Carbon($carInAndOut->updated_at))->format('d M Y H:i:s') }}</td>
         </tr>
         <tr>
           <th>Dibuat Oleh</th>
-          <td>{{ $checkout->createdBy->name ?? '-' }}</td>
+          <td>{{ $carInAndOut->createdBy->name ?? '-' }}</td>
         </tr>
         <tr>
           <th>Diedit Oleh</th>
-          <td>{{ $checkout->udatedBy->name ?? '-' }}</td>
+          <td>{{ $carInAndOut->udatedBy->name ?? '-' }}</td>
         </tr>
       </table>
     </div>
 
     <a href="{{ route('admin.car-in-and-out.index') }}" class="btn btn-secondary mr-3">Back</a>
-    <a href="{{ route('admin.car-in-and-out.edit', $checkout) }}" class="btn btn-primary">Edit</a>
+    <a href="{{ route('admin.car-in-and-out.edit', $carInAndOut) }}" class="btn btn-primary">Edit</a>
   </div>
 </div>
 @endsection

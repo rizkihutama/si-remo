@@ -42,11 +42,6 @@ class Checkout extends BaseModel
         "fine",
     ];
 
-    public static function formatDateFE($date)
-    {
-        return now()->parse($date)->locale('id')->isoFormat('ddd, D MMM Y');
-    }
-
     public static function paymentStatusLabels()
     {
         return [
@@ -109,7 +104,7 @@ class Checkout extends BaseModel
     {
         return [
             self::WITH_DRIVER_TRUE => '<h5><span class="badge badge-success">Iya</span></h5>',
-            self::WITH_DRIVER_FALSE => '<h5><span class="badge badge-danger">Tidak</span></h5>',
+            self::WITH_DRIVER_FALSE => '<h5><span class="badge badge-secondary">Tidak</span></h5>',
         ];
     }
 
@@ -130,11 +125,6 @@ class Checkout extends BaseModel
         return $query->where('status', self::STATUS_WAITING_CONFIRMATION);
     }
 
-    public function getFine()
-    {
-        return self::rupiah($this->fine);
-    }
-
     public static function getImgProofPath()
     {
         return 'public/proof/';
@@ -148,6 +138,11 @@ class Checkout extends BaseModel
     public function bookings()
     {
         return $this->belongsTo(Booking::class, "booking_id", "booking_id");
+    }
+
+    public function carInAndOuts()
+    {
+        return $this->hasMany(CarInAndOut::class, "checkout_id", "checkout_id");
     }
 
     public function users()

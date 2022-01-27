@@ -88,6 +88,11 @@ abstract class BaseModel extends Model
     return $query->where($this->table . '.status', self::STATUS_ACTIVE);
   }
 
+  public static function formatDateFE($date)
+  {
+    return now()->parse($date)->locale('id')->isoFormat('ddd, D MMM Y');
+  }
+
   public static function formatDate($value)
   {
     return Carbon::createFromFormat('d/m/Y', $value)->format('Y-m-d');
@@ -95,7 +100,7 @@ abstract class BaseModel extends Model
 
   public static function formatDateForm($value)
   {
-    return now()->parse($value)->format('d/m/Y');
+    return !empty($value) ? now()->parse($value)->format('d/m/Y') : null;
   }
 
   public static function formatTimeForm($value)

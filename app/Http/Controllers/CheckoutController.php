@@ -106,7 +106,7 @@ class CheckoutController extends Controller
     public function myCheckoutIndex(Request $request)
     {
         if ($request->ajax()) {
-            $data = Checkout::where('user_id', auth()->id())->get();
+            $data = Checkout::where('user_id', auth()->id())->with('carInAndOuts')->get();
             $datatables = DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
@@ -138,6 +138,11 @@ class CheckoutController extends Controller
 
                     return $btn;
                 })
+                ->addColumn('fine', function ($row) {
+                    return $row->carInAndOuts->map(function ($item) {
+                        return $item->getFine();
+                    })->implode('');
+                })
                 ->editColumn('booking_code', function ($row) {
                     return $row->bookings->code;
                 })
@@ -147,7 +152,7 @@ class CheckoutController extends Controller
                 ->editColumn('status', function ($row) {
                     return $row->getPaymentStatusBadgeLabelAttribute();
                 })
-                ->rawColumns(['payment_proof', 'status', 'action']);
+                ->rawColumns(['payment_proof', 'status', 'fine', 'action']);
             return $datatables->make(true);
         }
 
@@ -174,6 +179,7 @@ class CheckoutController extends Controller
             ->addColumn(['data' => 'booking_code', 'name' => 'booking_code', 'title' => 'Kode Booking'])
             ->addColumn(['data' => 'status', 'name' => 'status', 'title' => 'Status'])
             ->addColumn(['data' => 'payment_proof', 'name' => 'payment_proof', 'title' => 'Bukti Pembayaran'])
+            ->addColumn(['data' => 'fine', 'name' => 'fine', 'title' => 'Denda'])
             ->addColumn(['data' => 'action', 'name' => 'action', 'title' => 'Aksi', 'orderable' => false, 'searchable' => false, 'width' => 100, 'exportable' => false]);
 
         return view('checkout.index', compact('dataTable'));

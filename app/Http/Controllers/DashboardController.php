@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Exports\CheckoutsExport;
+use App\Models\CarInAndOut;
 use App\Models\Checkout;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use Yajra\DataTables\Facades\DataTables;
 use Yajra\DataTables\Html\Builder;
@@ -96,16 +98,38 @@ class DashboardController extends Controller
             'status' => 'required',
         ]);
 
-        $checkout->update([
-            'status' => $request->status,
-        ]);
+        DB::beginTransaction();
+        try {
+            $checkout->update([
+                'status' => $request->status,
+            ]);
+
+            $checkout->bookings->update([
+                'status' => $request->status,
+            ]);
+
+            if ($request->status == Checkout::STATUS_PAID) {
+                $carInAndOut = CarInAndOut::firstOrCreate([
+                    'code' => $checkout->code,
+                    'car_id' => $checkout->car_id,
+                    'user_id' => $checkout->user_id,
+                    'checkout_id' => $checkout->checkout_id,
+                    'booking_id' => $checkout->booking_id,
+                    'rent_status' => CarInAndOut::RENT_STATUS_NOT_RENTED,
+                ]);
+            }
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->with('error', $e->getMessage());
+        }
 
         return redirect()->route('admin.dashboard.index')->with('success', 'Status Pembayaran Berhasil Diubah');
     }
 
     public function export()
     {
-        // return Excel::download(new CheckoutsExport, 'checkouts.xlsx');
         return (new CheckoutsExport)->download('checkouts.xlsx');
     }
 }
