@@ -142,7 +142,7 @@ class CarInAndOutController extends Controller
         $this->validateRequest($request);
         $car_out = CarInAndOut::formatDate($request->car_out);
         $car_in = CarInAndOut::setCarInDate($request->car_in);
-        $getRentDays = $carInAndOut->getRentDays($car_out, $car_in);
+        $getRentDays = CarInAndOut::getRentDays($car_out, $car_in);
         $fine = $carInAndOut->countFine($getRentDays);
 
         DB::beginTransaction();

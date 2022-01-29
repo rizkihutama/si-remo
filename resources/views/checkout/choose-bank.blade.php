@@ -10,10 +10,10 @@
 </nav>
 
 <div class="row">
-  <div class="col-lg-5">
+  <div class="col-md-5">
     @include('checkout._detail')
   </div>
-  <div class="col-lg-7">
+  <div class="col-md-7 choose-bank">
     {!! Form::model($checkout, ['route' => ['car-checkout.update', $checkout->checkout_id], 'method' => 'PATCH','files'
     =>
     false]) !!}
@@ -46,6 +46,16 @@
 
 @push('style')
 <link rel="stylesheet" href="{{ asset('vendor/select2/dist/css/select2.min.css') }}" />
+<link rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/@ttskch/select2-bootstrap4-theme@x.x.x/dist/select2-bootstrap4.min.css">
+<style>
+  @media only screen and (max-width: 767px) {
+    .choose-bank {
+      margin-top: 2em;
+    }
+  }
+
+</style>
 @endpush
 
 @push('script')
@@ -53,7 +63,8 @@
 <script>
   $(document).ready(function() {
     $('.select2').select2({
-      widht: '100%'
+      width: '100%',
+      theme: 'bootstrap4'
     });
   });
 </script>

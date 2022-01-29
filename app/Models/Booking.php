@@ -58,7 +58,7 @@ class Booking extends BaseModel
         return $days;
     }
 
-    public function checkIsWithDriver($value)
+    public static function checkIsWithDriver($value)
     {
         ($value == self::WITH_DRIVER_TRUE) ? $value = self::WITH_DRIVER_TRUE : $value = self::WITH_DRIVER_FALSE;
         return $value;
@@ -66,8 +66,10 @@ class Booking extends BaseModel
 
     public static function getDriverId($value)
     {
-        $driverId = Driver::inRandomOrder()->driverAvaillable()->first()->driver_id;
-        ($value == self::WITH_DRIVER_TRUE) ? $driverId : $driverId = null;
+        $checkIsWithDriver = self::checkIsWithDriver($value);
+        ($checkIsWithDriver == self::WITH_DRIVER_TRUE)
+            ? $driverId = Driver::inRandomOrder()->driverAvaillable()->first()->driver_id
+            : $driverId = null;
         return $driverId;
     }
 

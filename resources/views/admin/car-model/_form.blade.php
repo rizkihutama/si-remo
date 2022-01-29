@@ -38,6 +38,8 @@
 @push('style')
 {{-- <link rel="stylesheet" href="{{ asset('assets/vendor/datepicker/css/bootstrap-datepicker3.min.css') }}"> --}}
 <link href="{{ asset('vendor/select2/dist/css/select2.min.css') }}" rel="stylesheet" />
+<link rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/@ttskch/select2-bootstrap4-theme@x.x.x/dist/select2-bootstrap4.min.css">
 @endpush
 
 @push('script')
@@ -52,7 +54,8 @@
   // });
   
   $('.select2').select2({
-    width: '100%'
+    width: '100%',
+    theme: 'bootstrap4',
   });
 </script>
 @endpush
