@@ -4,7 +4,7 @@
 <div class="row">
   <div class="col-lg-4 col-md-4">
     <div class="card">
-      <img src="{{ $image }}" class="card-img-top" alt="{{ $car->name }}">
+      <img src="{{ $image }}" class="card-img-top car-img" alt="{{ $car->name }}">
       <div class="card-body mt-3">
         <h3 class="card-title text-dark">{{ $car->name }}</h3>
         <ul class="nav nav-pills card-header-pills justify-content-between mt-3">
@@ -86,6 +86,15 @@
   </div>
 </div>
 @endsection
+
+@push('style')
+<style>
+  .car-img {
+    padding: 2rem;
+  }
+
+</style>
+@endpush
 
 @push('script')
 <script>

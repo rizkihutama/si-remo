@@ -112,6 +112,11 @@ class CheckoutController extends Controller
                 ->addColumn('action', function ($row) {
                     if (empty($row->bank_id)) {
                         $showRoute = route('car-checkout', ['checkout' => $row]);
+                        $btn = "<div class='d-flex'>
+                                <a href='{$showRoute}' class='btn btn-icon btn-info btn-sm mr-2' title='Pilih Bank'>
+                                <i class='fas fa-money-check-alt'></i>
+                                </a>
+                            </div>";
                     } else {
                         if ($row->status == Checkout::STATUS_PAID) {
                             $invoice = route('invoice', ['checkout' => $row]);
@@ -138,6 +143,11 @@ class CheckoutController extends Controller
 
                     return $btn;
                 })
+                ->addColumn('rent_status', function ($row) {
+                    return $row->carInAndOuts->map(function ($item) {
+                        return $item->getRentStatusBadgeLabelAttribute();
+                    })->implode('');
+                })
                 ->addColumn('fine', function ($row) {
                     return $row->carInAndOuts->map(function ($item) {
                         return $item->getFine();
@@ -152,7 +162,7 @@ class CheckoutController extends Controller
                 ->editColumn('status', function ($row) {
                     return $row->getPaymentStatusBadgeLabelAttribute();
                 })
-                ->rawColumns(['payment_proof', 'status', 'fine', 'action']);
+                ->rawColumns(['payment_proof', 'rent_status', 'status', 'fine', 'action']);
             return $datatables->make(true);
         }
 
@@ -178,6 +188,7 @@ class CheckoutController extends Controller
             ->addColumn(['data' => 'DT_RowIndex', 'name' => 'DT_RowIndex', 'title' => '#', 'orderable' => false, 'searchable' => false, 'width' => 30])
             ->addColumn(['data' => 'booking_code', 'name' => 'booking_code', 'title' => 'Kode Booking'])
             ->addColumn(['data' => 'status', 'name' => 'status', 'title' => 'Status'])
+            ->addColumn(['data' => 'rent_status', 'name' => 'rent_status', 'title' => 'Status Sewa'])
             ->addColumn(['data' => 'payment_proof', 'name' => 'payment_proof', 'title' => 'Bukti Pembayaran'])
             ->addColumn(['data' => 'fine', 'name' => 'fine', 'title' => 'Denda'])
             ->addColumn(['data' => 'action', 'name' => 'action', 'title' => 'Aksi', 'orderable' => false, 'searchable' => false, 'width' => 100, 'exportable' => false]);

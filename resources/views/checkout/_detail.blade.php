@@ -82,3 +82,12 @@
     </div>
   </div>
 </div>
+
+@push('style')
+<style>
+  .img-fluid {
+    padding: 2rem !important;
+  }
+
+</style>
+@endpush

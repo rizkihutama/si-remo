@@ -106,17 +106,6 @@ class CarInAndOut extends BaseModel
         return $this->fineStatusBadgeLabels()[$this->fine_status] ?? '-';
     }
 
-    public static function getDaysFromCarInAndCarOut($car_in, $car_out)
-    {
-        $carIn = new DateTime($car_in);
-        $carOut = new DateTime($car_out);
-        $interval = $carIn->diff($carOut);
-        $days = $interval->days;
-        ($days == 0) ? $days = 1 : $days;
-        ($car_in !== $car_out) ? $days++ : $days;
-        return $days;
-    }
-
     public static function setCarInDate($car_in)
     {
         return !empty($car_in) ? CarInAndOut::formatDate($car_in) : null;
@@ -124,7 +113,7 @@ class CarInAndOut extends BaseModel
 
     public static function getRentDays($car_out, $car_in)
     {
-        if (empty($car_out)) return null;
+        if (empty($car_in)) return null;
 
         $carOut = new DateTime($car_out);
         $carIn = new DateTime($car_in);
